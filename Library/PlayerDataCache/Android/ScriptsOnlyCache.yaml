@@ -154,7 +154,7 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
-      Hash: 50b3b7d13bb27a24ef3ec714bd5cd36d
+      Hash: b8aef9fb73cbb5f9da6a650c528a4363
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerController
@@ -809,4 +809,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.0.apk
+  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.1.apk

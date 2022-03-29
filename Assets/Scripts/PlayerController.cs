@@ -4,21 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IOnGameOverHandler
 {
-    GameManager gameManager;
-    [SerializeField] float speed;
-    [SerializeField] float speedLimit;
-    float horizontalInput;
-    float verticalInput;
-    Rigidbody playerRb;
-    bool isOnGround;
-    [SerializeField] float jumpForce;
+    [SerializeField] float _speed;
+    [SerializeField] float _speedLimit;
+    private Rigidbody _playerRb;
+    private bool _isOnGround;
+    [SerializeField] float _jumpForce;
     private GameObject _focalPoint;
-    GameObject ball;
-    readonly float ballRadius = 2.5f;
-    Vector3 steepVector;
-    [SerializeField] float cameraRotationSpeed;
-    float mouseHorizontalInput;
-    float mouseVerticalInput;
+    private GameObject _ball;
+    private readonly float _ballRadius = 2.5f;
+    private Vector3 _steepVector;
+    [SerializeField] float _cameraRotationSpeed;
     private Vector3 _normalizedVerticalMovementVector;
     private Vector3 _normalizedMovementVector;
     public PlayerInput Player_Input;
@@ -44,72 +39,51 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
         Player_Input = new PlayerInput();
 
         Player_Input.Player.Jump.performed += ctx => OnJump();
-        //Player_Input.Player.Move.performed += ctx => OnMove();
-        //Player_Input.Player.Look.performed += ctx => OnLook();
+        Player_Input.Player.Move.performed += ctx => OnMove();
+        Player_Input.Player.Look.performed += ctx => OnLook();
         Player_Input.Player.Attack.performed += ctx => OnAttack();
 
-        Player_Input.Player.Move1.performed += ctx => OnMove1();
-        Player_Input.Player.Look1.performed += ctx => OnLook1();
+        //Player_Input.Player.Move1.performed += ctx => OnMove1();
+        //Player_Input.Player.Look1.performed += ctx => OnLook1();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
-        playerRb = GetComponent<Rigidbody>();
-        ball = transform.Find("Ball").gameObject;
+        _playerRb = GetComponent<Rigidbody>();
+        _ball = transform.Find("Ball").gameObject;
         _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
+#if UNITY_ANDROID
+        _cameraRotationSpeed = 1.5f;
+#endif
     }
 
     // Update is called once per frame
     void Update()
     {
-        //verticalInput = Input.GetAxis("Vertical");
-        //horizontalInput = Input.GetAxis("Horizontal");
+        _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
+        _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
 
-        //_moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
-        //_lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
+        //_moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
+        //_lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
 
-        _moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
-        _lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
-
-        //if (!gameManager.gameOver)
-        //{
-        //if (isOnGround)
         Move();
-            //OnJump();
-            if (!_attackedRecently)
-                SpeedLimit();
-            RotateBall();
-        //}
-        //else
-        //{
-        //    _powerupIndicator.SetActive(false);
-        //    ball.GetComponent<Renderer>().enabled = false;
-        //}
+            
+        if (!_attackedRecently)
+            SpeedLimit();
+        RotateBall();
 
         if (Health <= 0 || transform.position.y < -5)
         {
             EventBus.RaiseEvent<IGameOverHandler>(h => h.HandleGameOver());
         }
-
-        //if (Health <= 0)
-        //{
-        //    gameManager.gameOver = true;
-        //    Debug.Log("Game over (health low)");
-        //}
-        //else if (transform.position.y < -5)
-        //{
-        //    gameManager.gameOver = true;
-        //    Debug.Log("Game over (dropped from map)");
-        //}
     }
 
     private void LateUpdate()
     {
         RotateCamera();
-        _playerVelocity = playerRb.velocity;
+        _playerVelocity = _playerRb.velocity;
     }
 
     public void HandleOnGameOver()
@@ -118,19 +92,19 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
         _powerupIndicator.SetActive(false);
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        ball.GetComponent<Renderer>().enabled = false;
+        _ball.GetComponent<Renderer>().enabled = false;
         Player_Input.Disable();
         Health = 0;
     }
 
-    private void OnAttack()
+    public void OnAttack()
     {
         if (!_attackCooldown)
         {
             _attackedRecently = true;
             _attackCooldown = true;
             _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
-            playerRb.AddForce(_normalizedVerticalMovementVector * _attackPower, ForceMode.Impulse);
+            _playerRb.AddForce(_normalizedVerticalMovementVector * _attackPower, ForceMode.Impulse);
             _attackCooldownIcon.Attacked();
             StartCoroutine("c_AttackCooldown");
             StartCoroutine("c_SpeedLimitDisabled");
@@ -149,15 +123,15 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
         _attackedRecently = false;
     }
 
-    //private void OnMove()
-    //{
-    //    _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
-    //}
-
-    private void OnMove1()
+    private void OnMove()
     {
-        _moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
+        _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
     }
+
+    //private void OnMove1()
+    //{
+    //    _moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
+    //}
 
     void Move()
     {
@@ -165,64 +139,48 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
         _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
         _rotationMovement = Quaternion.FromToRotation(Vector3.forward, _normalizedVerticalMovementVector);
         _normalizedMovementVector = _rotationMovement * _normalizedMovementVector;
-        playerRb.AddForce(_normalizedMovementVector * speed * Time.deltaTime);
-
-        //    if (playerRb.velocity.magnitude < speedLimit)
-        //    {
-        //        _normalizedVerticalMovementVector = new Vector3(focalPoint.transform.forward.x, 0f, focalPoint.transform.forward.z).normalized;
-        //        _normalizedMovementVector = (focalPoint.transform.right * horizontalInput + _normalizedVerticalMovementVector * verticalInput).normalized;
-        //        playerRb.AddForce(_normalizedMovementVector * speed * Time.deltaTime);
-        //    }
+        _playerRb.AddForce(_normalizedMovementVector * _speed * Time.deltaTime);
     }
 
-    //private void OnLook()
-    //{
-    //    _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
-    //}
-
-    private void OnLook1()
+    private void OnLook()
     {
-        _lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
+        _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
     }
+
+    //private void OnLook1()
+    //{
+    //    _lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
+    //}
 
     void RotateCamera()
     {
         _rotationX += _lookDirection.x;
         _rotationY += _lookDirection.y;
 
-        _focalPoint.transform.eulerAngles = new Vector3(-_rotationY * cameraRotationSpeed, _rotationX * cameraRotationSpeed, 0);
+        _focalPoint.transform.eulerAngles = new Vector3(-_rotationY * _cameraRotationSpeed, _rotationX * _cameraRotationSpeed, 0);
 
         if (_rotationY > 50)
             _rotationY = 50;
         else if (_rotationY < -35)
             _rotationY = -35;
-
-        //    mouseHorizontalInput += Input.GetAxis("Mouse X");
-        //    mouseVerticalInput -= Input.GetAxis("Mouse Y");
-        //    if (mouseVerticalInput > 10)
-        //        mouseVerticalInput = 10;
-        //    else if (mouseVerticalInput < -10)
-        //        mouseVerticalInput = -10;
-
-        //    focalPoint.transform.eulerAngles = new Vector3(mouseVerticalInput * cameraRotationSpeed, mouseHorizontalInput * cameraRotationSpeed, 0);
     }
 
-    private void OnJump()
+    public void OnJump()
     {
-        if (isOnGround)
+        if (_isOnGround)
         {
-            playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            _playerRb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
         }
     }
 
     void RotateBall()
     {
-        Vector3 movement = playerRb.velocity * Time.deltaTime;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up + steepVector, movement).normalized;
-        movement -= (Vector3.up + steepVector) * Vector3.Dot(movement, (Vector3.up + steepVector));
+        Vector3 movement = _playerRb.velocity * Time.deltaTime;
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up + _steepVector, movement).normalized;
+        movement -= (Vector3.up + _steepVector) * Vector3.Dot(movement, (Vector3.up + _steepVector));
         float distance = movement.magnitude;
-        float angle = distance * (180 / Mathf.PI) / ballRadius;
-        ball.transform.Rotate(rotationAxis * angle, Space.World);
+        float angle = distance * (180 / Mathf.PI) / _ballRadius;
+        _ball.transform.Rotate(rotationAxis * angle, Space.World);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -238,7 +196,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = true;
+            _isOnGround = true;
         }
 
         if (collision.gameObject.CompareTag("Enemy"))
@@ -266,47 +224,31 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
 
     private void OnCollisionExit(Collision collision)
     {
-        steepVector = Vector3.zero;
+        _steepVector = Vector3.zero;
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = false;
+            _isOnGround = false;
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        steepVector = Vector3.zero;
+        _steepVector = Vector3.zero;
         for (int i = 0; i < collision.contactCount; i++)
         {
             if (!collision.gameObject.CompareTag("Ground"))
             {
-                steepVector += collision.GetContact(i).normal;
+                _steepVector += collision.GetContact(i).normal;
             }
         }
-        //if (!isOnGround)
-        //{
-        //    Move();
-        //}
     }
 
     void SpeedLimit()
     {
-        if (playerRb.velocity.magnitude > speedLimit)
+        if (_playerRb.velocity.magnitude > _speedLimit)
         {
-            playerRb.velocity = playerRb.velocity.normalized * speedLimit;
+            _playerRb.velocity = _playerRb.velocity.normalized * _speedLimit;
         }
-
-        //if (playerRb.velocity.x > speedLimit)
-        //    playerRb.velocity = new Vector3(speedLimit, 0, playerRb.velocity.z);
-
-        //else if (playerRb.velocity.x < -speedLimit)
-        //    playerRb.velocity = new Vector3(-speedLimit, 0, playerRb.velocity.z);
-
-        //if (playerRb.velocity.z > speedLimit)
-        //    playerRb.velocity = new Vector3(playerRb.velocity.x, 0, speedLimit);
-
-        //else if (playerRb.velocity.z < -speedLimit)
-        //    playerRb.velocity = new Vector3(playerRb.velocity.x, 0, -speedLimit);
     }
 
     private void OnEnable()
