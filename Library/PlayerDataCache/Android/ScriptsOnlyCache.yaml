@@ -5,11 +5,15 @@ ScriptsOnlyBuild:
     - AttackCooldownIcon
     - DeathTrap
     - Enemy
+    - EnemyCountSlider
     - EnemyHealthBar
     - EnemyHealthBarRotate
+    - GameConfig
     - GameManager
     - HealthBar
+    - MenuNavigation
     - PlayerController
+    - RotationSlider
     - SpawnManager
     Unity.InputSystem.dll:
     - UnityEngine.InputSystem.InputActionAsset
@@ -27,6 +31,8 @@ ScriptsOnlyBuild:
     - TMPro.TMP_SpriteAsset
     - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
+    Unity.Timeline.Editor.dll:
+    - TimelinePreferences
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
@@ -43,7 +49,86 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.GraphicRaycaster
     - UnityEngine.UI.Image
+    - UnityEngine.UI.Slider
+    - UnityEngine.UI.Text
   sceneClasses:
+    Assets/Scenes/LoadingScene.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 49
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 89
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 108
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 1522}
+    - Class: 114
+      Script: {instanceID: 1710}
+    - Class: 114
+      Script: {instanceID: 1810}
+    - Class: 114
+      Script: {instanceID: 2138}
+    - Class: 114
+      Script: {instanceID: 2150}
+    - Class: 114
+      Script: {instanceID: 2502}
+    - Class: 114
+      Script: {instanceID: 2646}
+    - Class: 114
+      Script: {instanceID: 2696}
+    - Class: 114
+      Script: {instanceID: 2836}
+    - Class: 114
+      Script: {instanceID: 3168}
+    - Class: 114
+      Script: {instanceID: 3456}
+    - Class: 114
+      Script: {instanceID: 3880}
+    - Class: 114
+      Script: {instanceID: 4220}
+    - Class: 114
+      Script: {instanceID: 4368}
+    - Class: 114
+      Script: {instanceID: 4684}
+    - Class: 114
+      Script: {instanceID: 19262}
+    - Class: 114
+      Script: {instanceID: 19278}
+    - Class: 114
+      Script: {instanceID: 19792}
+    - Class: 114
+      Script: {instanceID: 19976}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
     Assets/Scenes/SampleScene.unity:
     - Class: 1
       Script: {instanceID: 0}
@@ -62,8 +147,6 @@ ScriptsOnlyBuild:
     - Class: 43
       Script: {instanceID: 0}
     - Class: 48
-      Script: {instanceID: 0}
-    - Class: 49
       Script: {instanceID: 0}
     - Class: 54
       Script: {instanceID: 0}
@@ -94,8 +177,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1860}
     - Class: 114
-      Script: {instanceID: 2138}
-    - Class: 114
       Script: {instanceID: 2386}
     - Class: 114
       Script: {instanceID: 2502}
@@ -120,17 +201,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 4220}
     - Class: 114
-      Script: {instanceID: 4368}
-    - Class: 114
       Script: {instanceID: 4474}
     - Class: 114
       Script: {instanceID: 4584}
     - Class: 114
-      Script: {instanceID: 4684}
-    - Class: 114
       Script: {instanceID: 4816}
     - Class: 114
       Script: {instanceID: 5118}
+    - Class: 114
+      Script: {instanceID: 19262}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -748,7 +827,7 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
-      Hash: 8c5e4b1a46e9eb75c4ba76926047d9e9
+      Hash: c6b73bdf406b106422f8aa8eeecfd6b5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SpawnManager
@@ -806,7 +885,32 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DeathTrap
+  - hash:
+      serializedVersion: 2
+      Hash: 5df5a1d5bbd7d1cb0a9a31a7aa7fb341
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameConfig
+  - hash:
+      serializedVersion: 2
+      Hash: a25152779463d896706d0f5d8bb2327e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: RotationSlider
+  - hash:
+      serializedVersion: 2
+      Hash: 0d7508cb4c21a6fa492cd44fac20249e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MenuNavigation
+  - hash:
+      serializedVersion: 2
+      Hash: 6590746509445824e6ac9fbad8d1ef89
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EnemyCountSlider
   platform: 13
   scenePathNames:
+  - Assets/Scenes/LoadingScene.unity
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.1.apk
+  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.2.apk

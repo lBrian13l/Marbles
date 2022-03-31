@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IOnGameOverHandler
 {
-    [SerializeField] float _speed;
-    [SerializeField] float _speedLimit;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _speedLimit;
     private Rigidbody _playerRb;
     private bool _isOnGround;
-    [SerializeField] float _jumpForce;
+    [SerializeField] private float _jumpForce;
     private GameObject _focalPoint;
     private GameObject _ball;
     private readonly float _ballRadius = 2.5f;
     private Vector3 _steepVector;
-    [SerializeField] float _cameraRotationSpeed;
+    [SerializeField] private float _cameraRotationSpeed;
     private Vector3 _normalizedVerticalMovementVector;
     private Vector3 _normalizedMovementVector;
     public PlayerInput Player_Input;
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
     private float _rotationX;
     private float _rotationY;
     private Quaternion _rotationMovement;
-    [SerializeField] float _attackPower;
+    [SerializeField] private float _attackPower;
     private bool _attackedRecently;
     private bool _attackCooldown;
     public float Health;
@@ -159,8 +159,8 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
 
         _focalPoint.transform.eulerAngles = new Vector3(-_rotationY * _cameraRotationSpeed, _rotationX * _cameraRotationSpeed, 0);
 
-        if (_rotationY > 50)
-            _rotationY = 50;
+        if (_rotationY > 30)
+            _rotationY = 30;
         else if (_rotationY < -35)
             _rotationY = -35;
     }

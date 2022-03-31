@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour, IOnGameOverHandler
 {
-    GameManager gameManager;
     public GameObject prefabPowerup;
     public GameObject prefabEnemy;
     float spawnRange = 45f;
@@ -15,12 +14,19 @@ public class SpawnManager : MonoBehaviour, IOnGameOverHandler
     private GameObject[] _powerups;
     private int _enemiesWithoutIndicator;
     [SerializeField] int _enemiesOnFirstWave;
+    [SerializeField] private GameConfig _gameConfig;
+    [SerializeField] private GameObject _plane;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
         player = GameObject.Find("Player");
+        _enemiesOnFirstWave = _gameConfig.GetEnemyCount();
+        if (_enemiesOnFirstWave > 10)
+        {
+            _plane.transform.localScale = new Vector3(_enemiesOnFirstWave, 1, _enemiesOnFirstWave);
+            spawnRange = 4.5f * _enemiesOnFirstWave;
+        }
         SpawnEnemies();
         SpawnPowerup();
     }
