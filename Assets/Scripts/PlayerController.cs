@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IOnGameOverHandler
+public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _speedLimit;
@@ -27,10 +27,12 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
     private bool _attackCooldown;
     public float Health;
     private GameObject _powerupIndicator;
+    public bool PowerupIndicatorIsActive;
     private const float Epsilon = 0.00001f;
     private Vector3 _playerVelocity;
     public float AttackCooldown;
     private AttackCooldownIcon _attackCooldownIcon;
+    [SerializeField] private GameConfig _gameConfig;
 
     private void Awake()
     {
@@ -54,9 +56,10 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
         _ball = transform.Find("Ball").gameObject;
         _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
-#if UNITY_ANDROID
-        _cameraRotationSpeed = 1.5f;
-#endif
+        _cameraRotationSpeed = _gameConfig.GetRotationSpeed();
+        //#if UNITY_ANDROID
+        //        _cameraRotationSpeed = 1.5f;
+        //#endif
     }
 
     // Update is called once per frame
@@ -185,10 +188,12 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Gem") && !transform.Find("Powerup Indicator").gameObject.activeInHierarchy)
+        if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
         {
+            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
             Destroy(other.gameObject);
             _powerupIndicator.SetActive(true);
+            PowerupIndicatorIsActive = true;
         }
     }
 
@@ -261,5 +266,11 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler
     {
         Player_Input.Disable();
         EventBus.Unsubscribe(this);
+    }
+
+    public void HandleFinishWave()
+    {
+        _powerupIndicator.SetActive(false);
+        PowerupIndicatorIsActive = false;
     }
 }

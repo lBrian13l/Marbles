@@ -31,8 +31,6 @@ ScriptsOnlyBuild:
     - TMPro.TMP_SpriteAsset
     - TMPro.TMP_StyleSheet
     - TMPro.TextMeshProUGUI
-    Unity.Timeline.Editor.dll:
-    - TimelinePreferences
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
@@ -80,39 +78,39 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1710}
     - Class: 114
-      Script: {instanceID: 1810}
+      Script: {instanceID: 1718}
     - Class: 114
-      Script: {instanceID: 2138}
+      Script: {instanceID: 1812}
     - Class: 114
-      Script: {instanceID: 2150}
+      Script: {instanceID: 2140}
     - Class: 114
-      Script: {instanceID: 2502}
+      Script: {instanceID: 2152}
     - Class: 114
-      Script: {instanceID: 2646}
+      Script: {instanceID: 2328}
     - Class: 114
-      Script: {instanceID: 2696}
+      Script: {instanceID: 2506}
     - Class: 114
-      Script: {instanceID: 2836}
+      Script: {instanceID: 2650}
     - Class: 114
-      Script: {instanceID: 3168}
+      Script: {instanceID: 2700}
     - Class: 114
-      Script: {instanceID: 3456}
+      Script: {instanceID: 2840}
     - Class: 114
-      Script: {instanceID: 3880}
+      Script: {instanceID: 2858}
     - Class: 114
-      Script: {instanceID: 4220}
+      Script: {instanceID: 3174}
     - Class: 114
-      Script: {instanceID: 4368}
+      Script: {instanceID: 3434}
     - Class: 114
-      Script: {instanceID: 4684}
+      Script: {instanceID: 3464}
     - Class: 114
-      Script: {instanceID: 19262}
+      Script: {instanceID: 3888}
     - Class: 114
-      Script: {instanceID: 19278}
+      Script: {instanceID: 4228}
     - Class: 114
-      Script: {instanceID: 19792}
+      Script: {instanceID: 4376}
     - Class: 114
-      Script: {instanceID: 19976}
+      Script: {instanceID: 4692}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -173,43 +171,43 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1634}
     - Class: 114
-      Script: {instanceID: 1810}
+      Script: {instanceID: 1812}
     - Class: 114
-      Script: {instanceID: 1860}
+      Script: {instanceID: 1862}
     - Class: 114
-      Script: {instanceID: 2386}
+      Script: {instanceID: 2328}
     - Class: 114
-      Script: {instanceID: 2502}
+      Script: {instanceID: 2390}
     - Class: 114
-      Script: {instanceID: 2646}
+      Script: {instanceID: 2506}
     - Class: 114
-      Script: {instanceID: 2682}
+      Script: {instanceID: 2650}
     - Class: 114
-      Script: {instanceID: 2696}
+      Script: {instanceID: 2686}
     - Class: 114
-      Script: {instanceID: 2836}
+      Script: {instanceID: 2700}
     - Class: 114
-      Script: {instanceID: 2948}
+      Script: {instanceID: 2840}
     - Class: 114
-      Script: {instanceID: 3168}
+      Script: {instanceID: 2954}
     - Class: 114
-      Script: {instanceID: 3456}
+      Script: {instanceID: 3174}
     - Class: 114
-      Script: {instanceID: 3620}
+      Script: {instanceID: 3464}
     - Class: 114
-      Script: {instanceID: 3880}
+      Script: {instanceID: 3628}
     - Class: 114
-      Script: {instanceID: 4220}
+      Script: {instanceID: 3888}
     - Class: 114
-      Script: {instanceID: 4474}
+      Script: {instanceID: 4228}
     - Class: 114
-      Script: {instanceID: 4584}
+      Script: {instanceID: 4482}
     - Class: 114
-      Script: {instanceID: 4816}
+      Script: {instanceID: 4592}
     - Class: 114
-      Script: {instanceID: 5118}
+      Script: {instanceID: 4824}
     - Class: 114
-      Script: {instanceID: 19262}
+      Script: {instanceID: 5126}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -233,7 +231,7 @@ ScriptsOnlyBuild:
   scriptHashData:
   - hash:
       serializedVersion: 2
-      Hash: b8aef9fb73cbb5f9da6a650c528a4363
+      Hash: 6d183d8ff6e48f112510d5b70465ddb3
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PlayerController
@@ -303,6 +301,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Slider
+  - hash:
+      serializedVersion: 2
+      Hash: 6590746509445824e6ac9fbad8d1ef89
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EnemyCountSlider
   - hash:
       serializedVersion: 2
       Hash: 3164bc883ff663a5cdb32d1ef7e7c0c5
@@ -383,6 +387,12 @@ ScriptsOnlyBuild:
     className: InputActionEditorWindow
   - hash:
       serializedVersion: 2
+      Hash: 5df5a1d5bbd7d1cb0a9a31a7aa7fb341
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameConfig
+  - hash:
+      serializedVersion: 2
       Hash: fc169718e5fd24cea7425f24908c0418
     assemblyName: Unity.InputSystem.dll
     namespaceName: UnityEngine.InputSystem.Editor
@@ -453,6 +463,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: GraphicRaycaster
+  - hash:
+      serializedVersion: 2
+      Hash: a25152779463d896706d0f5d8bb2327e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: RotationSlider
   - hash:
       serializedVersion: 2
       Hash: f40fedccd4adbc76605bea6d67537e4b
@@ -579,6 +595,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.InputSystem.dll
     namespaceName: UnityEngine.InputSystem.Editor
     className: InputActionImporterEditor
+  - hash:
+      serializedVersion: 2
+      Hash: 0d7508cb4c21a6fa492cd44fac20249e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MenuNavigation
   - hash:
       serializedVersion: 2
       Hash: caa533b001ae39b864ba8425019e2268
@@ -785,7 +807,7 @@ ScriptsOnlyBuild:
     className: TMP_Settings
   - hash:
       serializedVersion: 2
-      Hash: 3e4418daf6a265b9e032e3ecaa5f0fa1
+      Hash: b2571c88897800aa95bdf2afd565225d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Enemy
@@ -827,7 +849,7 @@ ScriptsOnlyBuild:
     className: TMP_ScrollbarEventHandler
   - hash:
       serializedVersion: 2
-      Hash: c6b73bdf406b106422f8aa8eeecfd6b5
+      Hash: f0e788d8d9fd6f4d43ffa0a46767c7a1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SpawnManager
@@ -885,32 +907,8 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DeathTrap
-  - hash:
-      serializedVersion: 2
-      Hash: 5df5a1d5bbd7d1cb0a9a31a7aa7fb341
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: GameConfig
-  - hash:
-      serializedVersion: 2
-      Hash: a25152779463d896706d0f5d8bb2327e
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: RotationSlider
-  - hash:
-      serializedVersion: 2
-      Hash: 0d7508cb4c21a6fa492cd44fac20249e
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MenuNavigation
-  - hash:
-      serializedVersion: 2
-      Hash: 6590746509445824e6ac9fbad8d1ef89
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: EnemyCountSlider
   platform: 13
   scenePathNames:
   - Assets/Scenes/LoadingScene.unity
   - Assets/Scenes/SampleScene.unity
-  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.2.apk
+  playerPath: C:/Users/PopCop/Projects/Marbles/Build/Android v0.1.3.apk

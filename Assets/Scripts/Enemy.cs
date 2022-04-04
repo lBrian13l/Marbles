@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IOnGameOverHandler
+public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
 {
-    GameManager gameManager;
     GameObject[] gems;
     Rigidbody enemyRb;
     [SerializeField] float speed;
@@ -17,14 +16,16 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler
     private Vector3 _enemyVelocity;
     private const float Epsilon = 0.00001f;
     private bool _gameOver;
+    private GameObject _powerupIndicator;
+    public bool PowerupIndicatorIsActive;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
         enemyRb = GetComponent<Rigidbody>();
         Player = GameObject.Find("Player");
         ball = transform.Find("Ball").gameObject;
+        _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
     }
 
     // Update is called once per frame
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler
     {
         if (transform.position.y < -5 || Health <= 0)
         {
+            EventBus.RaiseEvent<IEnemyDiedHandler>(h => h.HandleEnemyDied(transform.gameObject, PowerupIndicatorIsActive));
             Destroy(gameObject);
         }
 
@@ -54,7 +56,7 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler
 
     void Move()
     {
-        if (!transform.Find("Powerup Indicator").gameObject.activeInHierarchy && isOnGround)
+        if (!PowerupIndicatorIsActive && isOnGround)
         {
             MoveToPowerup();
         }
@@ -103,10 +105,12 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Gem") && !transform.Find("Powerup Indicator").gameObject.activeInHierarchy)
+        if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
         {
+            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
             Destroy(other.gameObject);
-            transform.Find("Powerup Indicator").gameObject.SetActive(true);
+            _powerupIndicator.SetActive(true);
+            PowerupIndicatorIsActive = true;
         }
     }
 
@@ -170,5 +174,11 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler
     private void OnDisable()
     {
         EventBus.Unsubscribe(this);
+    }
+
+    public void HandleFinishWave()
+    {
+        _powerupIndicator.SetActive(false);
+        PowerupIndicatorIsActive = false;
     }
 }

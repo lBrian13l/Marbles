@@ -735,9 +735,9 @@ MonoBehaviour:
   prefabPowerup: {fileID: 1000010880751780, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
   prefabEnemy: {fileID: 560683822002690853, guid: c2a85a3c76895d945b2fc5201459dc82, type: 3}
   enemyCount: 0
-  _enemiesOnFirstWave: 7
   _gameConfig: {fileID: 11400000, guid: fd0630533867af548b1d322b55b51935, type: 2}
   _plane: {fileID: 1505205710}
+  _enemyList: []
 --- !u!4 &494972945
 Transform:
   m_ObjectHideFlags: 0
@@ -790,7 +790,9 @@ MonoBehaviour:
   _cameraRotationSpeed: 0.5
   _attackPower: 25
   Health: 100
+  PowerupIndicatorIsActive: 0
   AttackCooldown: 3
+  _gameConfig: {fileID: 11400000, guid: fd0630533867af548b1d322b55b51935, type: 2}
 --- !u!135 &517423456
 SphereCollider:
   m_ObjectHideFlags: 0

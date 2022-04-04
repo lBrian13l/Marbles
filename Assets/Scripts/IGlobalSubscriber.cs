@@ -16,3 +16,18 @@ public interface IOnGameOverHandler : IGlobalSubscriber
 {
     void HandleOnGameOver();
 }
+
+public interface IEnemyDiedHandler : IGlobalSubscriber
+{
+    void HandleEnemyDied(GameObject enemy, bool powerupIsActive);
+}
+
+public interface IGemCollectedHandler : IGlobalSubscriber
+{
+    void HandleGemCollected(GameObject gem);
+}
+
+public interface IFinishWaveHandler : IGlobalSubscriber
+{
+    void HandleFinishWave();
+}
