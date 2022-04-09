@@ -55,22 +55,23 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\AttackCooldownIcon.cs" />
+    <Compile Include="Assets\Scripts\EnemyCountSlider.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBarRotate.cs" />
     <Compile Include="Assets\Scripts\EventBus.cs" />
+    <Compile Include="Assets\Scripts\GameConfig.cs" />
     <Compile Include="Assets\Scripts\AnimationScript.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\RotationSlider.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
     <Compile Include="Assets\Scripts\IGlobalSubscriber.cs" />
+    <Compile Include="Assets\Scripts\MenuNavigation.cs" />
     <Compile Include="Assets\Scripts\SubscribersList.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Input System\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\DeathTrap.cs" />
-    <Compile Include="Assets\Scripts\GameConfig.cs" />
-    <Compile Include="Assets\Scripts\RotationSlider.cs" />
-    <Compile Include="Assets\Scripts\MenuNavigation.cs" />
-    <Compile Include="Assets\Scripts\EnemyCountSlider.cs" />
+    <Compile Include="Assets\Scripts\MainMenuButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -5,18 +5,19 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour, IGameOverHandler
+public class GameManager : MonoBehaviour, IGameOverHandler, IOnVictoryHandler
 {
     //public bool gameOver;
     public Button restartButton;
     public TextMeshProUGUI gameOverText;
     public TextMeshProUGUI EnemyCounterText;
-    private PlayerController _player;
     private PlayerInput _playerInput;
     private SpawnManager _spawnManager;
+    [SerializeField] private GameObject _playerPrefab;
 
     private void Awake()
     {
+        Instantiate(_playerPrefab, new Vector3(0, 3f, 0), _playerPrefab.transform.rotation);
         _playerInput = new PlayerInput();
         _playerInput.Disable();
     }
@@ -24,7 +25,6 @@ public class GameManager : MonoBehaviour, IGameOverHandler
     // Start is called before the first frame update
     void Start()
     {
-        _player = FindObjectOfType<PlayerController>();
         _spawnManager = FindObjectOfType<SpawnManager>();
         //Cursor.lockState = CursorLockMode.Locked;
         //Cursor.visible = false;
@@ -38,8 +38,6 @@ public class GameManager : MonoBehaviour, IGameOverHandler
 
         //if (gameOver)
         //{
-        //    if (FindObjectOfType<Enemy>() == null)
-        //        gameOverText.text = "Victory";
         //    gameOverText.gameObject.SetActive(true);
         //    restartButton.gameObject.SetActive(true);
         //    _player.Player_Input.Disable();
@@ -52,17 +50,10 @@ public class GameManager : MonoBehaviour, IGameOverHandler
     public void RestartGame()
     {
         _playerInput.Disable();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(1);
         _playerInput.Disable();
         //_player.Player_Input.Enable();
     }
-
-    //private void OnRestart()
-    //{
-    //    //gameOver = false;
-    //    _playerInput.Disable();
-    //    RestartGame();
-    //}
 
     private void OnEnable()
     {
@@ -84,7 +75,11 @@ public class GameManager : MonoBehaviour, IGameOverHandler
         _playerInput.Enable();
         _playerInput.UI.Restart.performed += ctx => RestartGame();
 
-
         EventBus.RaiseEvent<IOnGameOverHandler>(h => h.HandleOnGameOver());
+    }
+
+    public void HandleOnVictory()
+    {
+        gameOverText.text = "Victory";
     }
 }

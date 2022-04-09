@@ -31,3 +31,13 @@ public interface IFinishWaveHandler : IGlobalSubscriber
 {
     void HandleFinishWave();
 }
+
+public interface IOnPlayerSpawnedHandler : IGlobalSubscriber
+{
+    void HandlePlayerSpawned(GameObject player);
+}
+
+public interface IOnVictoryHandler : IGlobalSubscriber
+{
+    void HandleOnVictory();
+}

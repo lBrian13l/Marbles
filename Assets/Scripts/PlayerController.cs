@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private GameObject _ball;
     private readonly float _ballRadius = 2.5f;
     private Vector3 _steepVector;
-    [SerializeField] private float _cameraRotationSpeed;
+    private float _cameraRotationSpeed;
     private Vector3 _normalizedVerticalMovementVector;
     private Vector3 _normalizedMovementVector;
     public PlayerInput Player_Input;
@@ -44,9 +44,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         Player_Input.Player.Move.performed += ctx => OnMove();
         Player_Input.Player.Look.performed += ctx => OnLook();
         Player_Input.Player.Attack.performed += ctx => OnAttack();
-
-        //Player_Input.Player.Move1.performed += ctx => OnMove1();
-        //Player_Input.Player.Look1.performed += ctx => OnLook1();
     }
 
     // Start is called before the first frame update
@@ -57,9 +54,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
         _cameraRotationSpeed = _gameConfig.GetRotationSpeed();
-        //#if UNITY_ANDROID
-        //        _cameraRotationSpeed = 1.5f;
-        //#endif
     }
 
     // Update is called once per frame
@@ -67,9 +61,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
         _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
-
-        //_moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
-        //_lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
 
         Move();
             
@@ -131,11 +122,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
     }
 
-    //private void OnMove1()
-    //{
-    //    _moveDirectionInput = Player_Input.Player.Move1.ReadValue<Vector2>();
-    //}
-
     void Move()
     {
         _normalizedMovementVector = new Vector3(_moveDirectionInput.x, 0, _moveDirectionInput.y);
@@ -149,11 +135,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
     }
-
-    //private void OnLook1()
-    //{
-    //    _lookDirection = Player_Input.Player.Look1.ReadValue<Vector2>();
-    //}
 
     void RotateCamera()
     {
@@ -210,7 +191,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
             Vector3 toEnemyVelocity = Vector3.Project(_playerVelocity, toEnemyVector);
             if (AreCodirected(toEnemyVector, toEnemyVelocity))
             {
-                int multiplier = (int)(toEnemyVelocity.magnitude / 10f);
+                int multiplier = (int)(toEnemyVelocity.magnitude / 15f);
                 Damage(collision, multiplier);
                 //Debug.Log($"Speed: {toEnemyVelocity.magnitude}, multiplier: {multiplier}");
             }
@@ -260,6 +241,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         Player_Input.Enable();
         EventBus.Subscribe(this);
+        EventBus.RaiseEvent<IOnPlayerSpawnedHandler>(h => h.HandlePlayerSpawned(transform.gameObject));
     }
 
     private void OnDisable()

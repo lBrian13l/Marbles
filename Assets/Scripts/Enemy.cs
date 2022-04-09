@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
 {
-    GameObject[] gems;
-    Rigidbody enemyRb;
-    [SerializeField] float speed;
-    public GameObject Player;
-    bool isOnGround;
-    Vector3 steepVector;
-    readonly float ballRadius = 2.5f;
-    GameObject ball;
+    private GameObject[] _gems;
+    private Rigidbody _enemyRb;
+    [SerializeField] private float _speed;
+    private GameObject _player;
+    private bool _isOnGround;
+    private Vector3 _steepVector;
+    private readonly float _ballRadius = 2.5f;
+    private GameObject _ball;
     public float Health;
     private Vector3 _enemyVelocity;
     private const float Epsilon = 0.00001f;
     private bool _gameOver;
     private GameObject _powerupIndicator;
     public bool PowerupIndicatorIsActive;
+    [SerializeField] private float _speedLimit;
 
     // Start is called before the first frame update
     void Start()
     {
-        enemyRb = GetComponent<Rigidbody>();
-        Player = GameObject.Find("Player");
-        ball = transform.Find("Ball").gameObject;
+        _enemyRb = GetComponent<Rigidbody>();
+        _ball = transform.Find("Ball").gameObject;
         _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
     }
 
@@ -37,16 +37,17 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
             Destroy(gameObject);
         }
 
-
-
         if (!_gameOver)
+        {
             Move();
+            SpeedLimit();
+        }
         RotateBall();
     }
 
     private void LateUpdate()
     {
-        _enemyVelocity = enemyRb.velocity;
+        _enemyVelocity = _enemyRb.velocity;
     }
 
     public void HandleOnGameOver()
@@ -56,11 +57,11 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
 
     void Move()
     {
-        if (!PowerupIndicatorIsActive && isOnGround)
+        if (!PowerupIndicatorIsActive && _isOnGround)
         {
             MoveToPowerup();
         }
-        else if (isOnGround)
+        else if (_isOnGround)
         {
             MoveToPlayer();
         }
@@ -68,16 +69,16 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
 
     void MoveToPowerup()
     {
-        gems = GameObject.FindGameObjectsWithTag("Gem");
+        _gems = GameObject.FindGameObjectsWithTag("Gem");
         float distanceToPowerup = 999f;
-        if (gems.Length == 0)
+        if (_gems.Length == 0)
         {
 
         }
         else
         {
             Vector3 toPowerup = Vector3.zero;
-            foreach (GameObject gem in gems)
+            foreach (GameObject gem in _gems)
             {
                 if ((gem.transform.position - transform.position).magnitude < distanceToPowerup)
                 {
@@ -85,22 +86,22 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
                     toPowerup = (gem.transform.position - transform.position).normalized;
                 }
             }
-            enemyRb.AddForce(toPowerup * speed * Time.deltaTime, ForceMode.Force);
+            _enemyRb.AddForce(toPowerup * _speed * Time.deltaTime, ForceMode.Force);
         }
     }
 
     void MoveToPlayer()
     {
-        enemyRb.AddForce((Player.transform.position - transform.position).normalized * speed * Time.deltaTime, ForceMode.Force);
+        _enemyRb.AddForce((_player.transform.position - transform.position).normalized * _speed * Time.deltaTime, ForceMode.Force);
     }
 
     void RotateBall()
     {
-        Vector3 movement = enemyRb.velocity * Time.deltaTime;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up + steepVector, movement).normalized;
+        Vector3 movement = _enemyRb.velocity * Time.deltaTime;
+        Vector3 rotationAxis = Vector3.Cross(Vector3.up + _steepVector, movement).normalized;
         float distance = movement.magnitude;
-        float angle = distance * (180 / Mathf.PI) / ballRadius;
-        ball.transform.Rotate(rotationAxis * angle, Space.World);
+        float angle = distance * (180 / Mathf.PI) / _ballRadius;
+        _ball.transform.Rotate(rotationAxis * angle, Space.World);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -118,7 +119,7 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = true;
+            _isOnGround = true;
         }
 
         if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
@@ -134,7 +135,7 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
                 }
                 else
                 {
-                    Player.GetComponent<PlayerController>().Health -= 10 * multiplier;
+                    _player.GetComponent<PlayerController>().Health -= 10 * multiplier;
                 }
                 //Debug.Log($"Speed: {toEnemyVelocity.magnitude}, multiplier: {multiplier}");
             }
@@ -150,18 +151,18 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isOnGround = false;
+            _isOnGround = false;
         }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        steepVector = Vector3.zero;
+        _steepVector = Vector3.zero;
         for (int i = 0; i < collision.contactCount; i++)
         {
             if (!collision.gameObject.CompareTag("Ground"))
             {
-                steepVector += collision.GetContact(i).normal;
+                _steepVector += collision.GetContact(i).normal;
             }
         }
     }
@@ -180,5 +181,18 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     {
         _powerupIndicator.SetActive(false);
         PowerupIndicatorIsActive = false;
+    }
+
+    public void SetPlayer(GameObject player)
+    {
+        _player = player;
+    }
+
+    void SpeedLimit()
+    {
+        if (_enemyRb.velocity.magnitude > _speedLimit)
+        {
+            _enemyRb.velocity = _enemyRb.velocity.normalized * _speedLimit;
+        }
     }
 }

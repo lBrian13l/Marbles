@@ -519,9 +519,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccdb0c1d5a2f9441b23fe45dc93b1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 575
-  Player: {fileID: 0}
+  _speed: 900
   Health: 100
+  PowerupIndicatorIsActive: 0
+  _speedLimit: 20
 --- !u!54 &2251509071340086999
 Rigidbody:
   m_ObjectHideFlags: 0
