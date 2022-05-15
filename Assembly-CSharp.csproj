@@ -61,8 +61,11 @@
     <Compile Include="Assets\Scripts\GameConfig.cs" />
     <Compile Include="Assets\Scripts\AnimationScript.cs" />
     <Compile Include="Assets\Scripts\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\AttackButton.cs" />
     <Compile Include="Assets\Scripts\RotationSlider.cs" />
+    <Compile Include="Assets\Scripts\JumpButton.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
+    <Compile Include="Assets\Scripts\MainMenuButton.cs" />
     <Compile Include="Assets\Scripts\IGlobalSubscriber.cs" />
     <Compile Include="Assets\Scripts\MenuNavigation.cs" />
     <Compile Include="Assets\Scripts\SubscribersList.cs" />
@@ -71,7 +74,7 @@
     <Compile Include="Assets\Input System\PlayerInput.cs" />
     <Compile Include="Assets\Scripts\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\DeathTrap.cs" />
-    <Compile Include="Assets\Scripts\MainMenuButton.cs" />
+    <Compile Include="Assets\Scripts\MoveTo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -693,6 +696,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="NavMeshComponents.csproj">
+      <Project>{2F508E6A-9782-E34E-9063-E4D993D5EC85}</Project>
+      <Name>NavMeshComponents</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponentsEditor.csproj">
+      <Project>{72E03359-0594-F1B8-FEEA-033062CAD0A0}</Project>
+      <Name>NavMeshComponentsEditor</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

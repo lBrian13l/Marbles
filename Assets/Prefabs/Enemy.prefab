@@ -520,7 +520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 900
+  _ball: {fileID: 7140791747766519387}
   Health: 100
+  _powerupIndicator: {fileID: 8688620107423138889}
   PowerupIndicatorIsActive: 0
   _speedLimit: 20
 --- !u!54 &2251509071340086999
@@ -696,5 +698,10 @@ PrefabInstance:
 --- !u!4 &8689998837373418151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4122938131327598, guid: a37573ad5d3fb7a47997aadbf0976202, type: 3}
+  m_PrefabInstance: {fileID: 8689614310400102601}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8688620107423138889 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1015780934767744, guid: a37573ad5d3fb7a47997aadbf0976202, type: 3}
   m_PrefabInstance: {fileID: 8689614310400102601}
   m_PrefabAsset: {fileID: 0}

@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private Rigidbody _playerRb;
     private bool _isOnGround;
     [SerializeField] private float _jumpForce;
-    private GameObject _focalPoint;
-    private GameObject _ball;
+    [SerializeField] private GameObject _focalPoint;
+    [SerializeField] private GameObject _ball;
     private readonly float _ballRadius = 2.5f;
     private Vector3 _steepVector;
     private float _cameraRotationSpeed;
@@ -26,34 +26,45 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private bool _attackedRecently;
     private bool _attackCooldown;
     public float Health;
-    private GameObject _powerupIndicator;
+    [SerializeField] private GameObject _powerupIndicator;
     public bool PowerupIndicatorIsActive;
     private const float Epsilon = 0.00001f;
     private Vector3 _playerVelocity;
     public float AttackCooldown;
     private AttackCooldownIcon _attackCooldownIcon;
     [SerializeField] private GameConfig _gameConfig;
+    [SerializeField] private GameObject _camera;
+    private float _cameraZoom = 12f;
+    private Vector3 _cameraPos;
+    private float _zoomingSpeed = 10f;
+    private bool _isMoving;
+    private bool _isRotating;
+    private bool _gameOver;
 
     private void Awake()
     {
-        _focalPoint = GameObject.Find("Focal Point");
-
         Player_Input = new PlayerInput();
 
         Player_Input.Player.Jump.performed += ctx => OnJump();
         Player_Input.Player.Move.performed += ctx => OnMove();
+        Player_Input.Player.Move.started += ctx => OnMoveStart();
+        Player_Input.Player.Move.canceled += ctx => OnMoveEnd();
         Player_Input.Player.Look.performed += ctx => OnLook();
+        Player_Input.Player.Look.started += ctx => OnLookStart();
+        Player_Input.Player.Look.canceled += ctx => OnLookEnd();
         Player_Input.Player.Attack.performed += ctx => OnAttack();
+        Player_Input.Player.Zoom.performed += ctx => OnZoom();
+        Player_Input.Player.SecondaryTouchContact.started += ctx => ZoomStart();
+        Player_Input.Player.SecondaryTouchContact.canceled += ctx => ZoomEnd();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         _playerRb = GetComponent<Rigidbody>();
-        _ball = transform.Find("Ball").gameObject;
-        _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
         _cameraRotationSpeed = _gameConfig.GetRotationSpeed();
+        _cameraPos = new Vector3(0f, _cameraZoom, -_cameraZoom);
     }
 
     // Update is called once per frame
@@ -68,9 +79,12 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
             SpeedLimit();
         RotateBall();
 
-        if (Health <= 0 || transform.position.y < -5)
+        if (!_gameOver)
         {
-            EventBus.RaiseEvent<IGameOverHandler>(h => h.HandleGameOver());
+            if (Health <= 0 || transform.position.y < -5)
+            {
+                EventBus.RaiseEvent<IGameOverHandler>(h => h.HandleGameOver());
+            }
         }
     }
 
@@ -78,10 +92,12 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         RotateCamera();
         _playerVelocity = _playerRb.velocity;
+        Zooming();
     }
 
     public void HandleOnGameOver()
     {
+        _gameOver = true;
         GetComponent<SphereCollider>().enabled = false;
         _powerupIndicator.SetActive(false);
         GetComponent<Rigidbody>().useGravity = false;
@@ -122,7 +138,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
     }
 
-    void Move()
+    private void Move()
     {
         _normalizedMovementVector = new Vector3(_moveDirectionInput.x, 0, _moveDirectionInput.y);
         _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
@@ -131,12 +147,86 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         _playerRb.AddForce(_normalizedMovementVector * _speed * Time.deltaTime);
     }
 
+    private void OnMoveStart()
+    {
+        _isMoving = true;
+    }
+
+    private void OnMoveEnd()
+    {
+        _isMoving = false;
+    }
+
+    private void OnLookStart()
+    {
+        _isRotating = true;
+    }
+
+    private void OnLookEnd()
+    {
+        _isRotating = false;
+    }
+
     private void OnLook()
     {
         _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
     }
 
-    void RotateCamera()
+    private void OnZoom()
+    {
+        _cameraZoom -= Player_Input.Player.Zoom.ReadValue<Vector2>().y;
+
+        if (_cameraZoom > 40)
+            _cameraZoom = 40;
+        else if (_cameraZoom < 7)
+            _cameraZoom = 7;
+
+        _cameraPos = new Vector3(0f, _cameraZoom, -_cameraZoom);
+    }
+
+    private void Zooming()
+    {
+        _camera.transform.localPosition = Vector3.Lerp(_camera.transform.localPosition, _cameraPos, Time.deltaTime * _zoomingSpeed);
+    }
+
+    private void ZoomStart()
+    {
+        StartCoroutine("c_ZoomDetection");
+    }
+
+    private void ZoomEnd()
+    {
+        StopCoroutine("c_ZoomDetection");
+    }
+
+    private IEnumerator c_ZoomDetection()
+    {
+        float previousDistance = 0f;
+        float distance;
+        while (!_isMoving && !_isRotating)
+        {
+            distance = Vector2.Distance(Player_Input.Player.PrimaryFingerPos.ReadValue<Vector2>(), Player_Input.Player.SecondaryFingerPos.ReadValue<Vector2>());
+            if (distance > previousDistance)
+            {
+                _cameraZoom -= 0.25f;
+
+                if (_cameraZoom < 7)
+                    _cameraZoom = 7;
+            }
+            else if (distance < previousDistance)
+            {
+                _cameraZoom += 0.25f;
+
+                if (_cameraZoom > 40)
+                    _cameraZoom = 40;
+            }
+            _cameraPos = new Vector3(0f, _cameraZoom, -_cameraZoom);
+            previousDistance = distance;
+            yield return null;
+        }
+    }
+    
+    private void RotateCamera()
     {
         _rotationX += _lookDirection.x;
         _rotationY += _lookDirection.y;
@@ -157,7 +247,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         }
     }
 
-    void RotateBall()
+    private void RotateBall()
     {
         Vector3 movement = _playerRb.velocity * Time.deltaTime;
         Vector3 rotationAxis = Vector3.Cross(Vector3.up + _steepVector, movement).normalized;
@@ -171,10 +261,9 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
         {
-            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
-            Destroy(other.gameObject);
             _powerupIndicator.SetActive(true);
             PowerupIndicatorIsActive = true;
+            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
         }
     }
 
@@ -229,7 +318,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         }
     }
 
-    void SpeedLimit()
+    private void SpeedLimit()
     {
         if (_playerRb.velocity.magnitude > _speedLimit)
         {
@@ -241,7 +330,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     {
         Player_Input.Enable();
         EventBus.Subscribe(this);
-        EventBus.RaiseEvent<IOnPlayerSpawnedHandler>(h => h.HandlePlayerSpawned(transform.gameObject));
+        EventBus.RaiseEvent<IPlayerSpawnedHandler>(h => h.HandlePlayerSpawned(transform.gameObject));
     }
 
     private void OnDisable()

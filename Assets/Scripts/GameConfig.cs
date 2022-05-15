@@ -16,6 +16,8 @@ public class GameConfig : ScriptableObject
     public void SetRotationSpeed(float speed)
     {
         _rotationSpeed = speed;
+        PlayerPrefs.SetFloat("RotationSpeed", _rotationSpeed);
+        PlayerPrefs.Save();
     }
 
     public int GetEnemyCount()
@@ -26,5 +28,16 @@ public class GameConfig : ScriptableObject
     public void SetEnemyCount(int count)
     {
         _enemyCount = count;
+        PlayerPrefs.SetInt("EnemyCount", _enemyCount);
+        PlayerPrefs.Save();
+    }
+
+    private void Awake()
+    {
+        if (PlayerPrefs.HasKey("EnemyCount"))
+            _enemyCount = PlayerPrefs.GetInt("EnemyCount");
+
+        if (PlayerPrefs.HasKey("RotationSpeed"))
+            _rotationSpeed = PlayerPrefs.GetFloat("RotationSpeed");
     }
 }

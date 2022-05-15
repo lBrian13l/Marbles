@@ -42,22 +42,40 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Move1",
+                    "name": "Zoom",
                     "type": "Value",
-                    "id": "a01d6b9e-fcfd-4452-be49-73e41d0a5c02",
+                    "id": "437ff998-0ad2-4e41-9bb6-0ac05aca3630",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Look1",
+                    "name": "PrimaryFingerPos",
                     "type": "Value",
-                    "id": "0d8d700c-70da-4f71-9730-6e940fa7cfa6",
+                    "id": "839bbae3-85d4-412c-8cb3-d381d2ed85f1",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "SecondaryFingerPos",
+                    "type": "Value",
+                    "id": "fe5dff2b-8b5e-4e60-ac8f-fdddd4f299fe",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SecondaryTouchContact",
+                    "type": "Button",
+                    "id": "bf49ac89-45c8-4275-8604-ab76725d3cda",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -173,23 +191,45 @@
                 },
                 {
                     "name": "",
-                    "id": "f904128e-f8d6-44af-8227-809943802880",
-                    "path": "<Gamepad>/leftStick",
+                    "id": "123ffc5c-eb97-4f73-b9bb-e988e57cf94c",
+                    "path": "<Mouse>/scroll",
                     "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move1",
+                    "processors": "NormalizeVector2",
+                    "groups": "KeyboardMouse",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "3d7089c3-792b-4302-b7d0-f87dcd76a2ff",
-                    "path": "<Gamepad>/rightStick",
+                    "id": "05453623-3339-441c-855e-9ca48586a2fa",
+                    "path": "<Touchscreen>/touch0/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Look1",
+                    "groups": "Android",
+                    "action": "PrimaryFingerPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e158b361-60c9-4d6f-a6a2-6be3bbe7aa45",
+                    "path": "<Touchscreen>/touch1/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Android",
+                    "action": "SecondaryFingerPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90b1ca34-667a-444e-94e6-41d275bffd49",
+                    "path": "<Touchscreen>/touch1/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Android",
+                    "action": "SecondaryTouchContact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -11,12 +11,12 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     private bool _isOnGround;
     private Vector3 _steepVector;
     private readonly float _ballRadius = 2.5f;
-    private GameObject _ball;
+    [SerializeField] private GameObject _ball;
     public float Health;
     private Vector3 _enemyVelocity;
     private const float Epsilon = 0.00001f;
     private bool _gameOver;
-    private GameObject _powerupIndicator;
+    [SerializeField] private GameObject _powerupIndicator;
     public bool PowerupIndicatorIsActive;
     [SerializeField] private float _speedLimit;
 
@@ -24,8 +24,6 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     void Start()
     {
         _enemyRb = GetComponent<Rigidbody>();
-        _ball = transform.Find("Ball").gameObject;
-        _powerupIndicator = transform.Find("Powerup Indicator").gameObject;
     }
 
     // Update is called once per frame
@@ -34,7 +32,6 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
         if (transform.position.y < -5 || Health <= 0)
         {
             EventBus.RaiseEvent<IEnemyDiedHandler>(h => h.HandleEnemyDied(transform.gameObject, PowerupIndicatorIsActive));
-            Destroy(gameObject);
         }
 
         if (!_gameOver)
@@ -108,10 +105,9 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     {
         if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
         {
-            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
-            Destroy(other.gameObject);
             _powerupIndicator.SetActive(true);
             PowerupIndicatorIsActive = true;
+            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
         }
     }
 

@@ -2,6 +2,7 @@
 -a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\UnityEngine.TestRunner.dll"
 -a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\Unity.Timeline.dll"
 -a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\Unity.TextMeshPro.dll"
+-a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\NavMeshComponents.dll"
 -a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\Unity.InputSystem.dll"
 -a="C:\Users\PopCop\Projects\Marbles\Library\PlayerScriptAssemblies\UnityEngine.UI.dll"
 -a="C:\Users\PopCop\Projects\Marbles\Library\PackageCache\com.unity.nuget.newtonsoft-json@2.0.0\Runtime\AOT\Newtonsoft.Json.dll"

@@ -32,7 +32,7 @@ public interface IFinishWaveHandler : IGlobalSubscriber
     void HandleFinishWave();
 }
 
-public interface IOnPlayerSpawnedHandler : IGlobalSubscriber
+public interface IPlayerSpawnedHandler : IGlobalSubscriber
 {
     void HandlePlayerSpawned(GameObject player);
 }

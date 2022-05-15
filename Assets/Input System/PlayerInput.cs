@@ -64,22 +64,40 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Move1"",
+                    ""name"": ""Zoom"",
                     ""type"": ""Value"",
-                    ""id"": ""a01d6b9e-fcfd-4452-be49-73e41d0a5c02"",
+                    ""id"": ""437ff998-0ad2-4e41-9bb6-0ac05aca3630"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Look1"",
+                    ""name"": ""PrimaryFingerPos"",
                     ""type"": ""Value"",
-                    ""id"": ""0d8d700c-70da-4f71-9730-6e940fa7cfa6"",
+                    ""id"": ""839bbae3-85d4-412c-8cb3-d381d2ed85f1"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SecondaryFingerPos"",
+                    ""type"": ""Value"",
+                    ""id"": ""fe5dff2b-8b5e-4e60-ac8f-fdddd4f299fe"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SecondaryTouchContact"",
+                    ""type"": ""Button"",
+                    ""id"": ""bf49ac89-45c8-4275-8604-ab76725d3cda"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press"",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -195,23 +213,45 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""f904128e-f8d6-44af-8227-809943802880"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""id"": ""123ffc5c-eb97-4f73-b9bb-e988e57cf94c"",
+                    ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move1"",
+                    ""processors"": ""NormalizeVector2"",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3d7089c3-792b-4302-b7d0-f87dcd76a2ff"",
-                    ""path"": ""<Gamepad>/rightStick"",
+                    ""id"": ""05453623-3339-441c-855e-9ca48586a2fa"",
+                    ""path"": ""<Touchscreen>/touch0/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Look1"",
+                    ""groups"": ""Android"",
+                    ""action"": ""PrimaryFingerPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e158b361-60c9-4d6f-a6a2-6be3bbe7aa45"",
+                    ""path"": ""<Touchscreen>/touch1/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Android"",
+                    ""action"": ""SecondaryFingerPos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""90b1ca34-667a-444e-94e6-41d275bffd49"",
+                    ""path"": ""<Touchscreen>/touch1/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Android"",
+                    ""action"": ""SecondaryTouchContact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -282,8 +322,10 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
-        m_Player_Move1 = m_Player.FindAction("Move1", throwIfNotFound: true);
-        m_Player_Look1 = m_Player.FindAction("Look1", throwIfNotFound: true);
+        m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
+        m_Player_PrimaryFingerPos = m_Player.FindAction("PrimaryFingerPos", throwIfNotFound: true);
+        m_Player_SecondaryFingerPos = m_Player.FindAction("SecondaryFingerPos", throwIfNotFound: true);
+        m_Player_SecondaryTouchContact = m_Player.FindAction("SecondaryTouchContact", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Restart = m_UI.FindAction("Restart", throwIfNotFound: true);
@@ -350,8 +392,10 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Attack;
-    private readonly InputAction m_Player_Move1;
-    private readonly InputAction m_Player_Look1;
+    private readonly InputAction m_Player_Zoom;
+    private readonly InputAction m_Player_PrimaryFingerPos;
+    private readonly InputAction m_Player_SecondaryFingerPos;
+    private readonly InputAction m_Player_SecondaryTouchContact;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -360,8 +404,10 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
-        public InputAction @Move1 => m_Wrapper.m_Player_Move1;
-        public InputAction @Look1 => m_Wrapper.m_Player_Look1;
+        public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
+        public InputAction @PrimaryFingerPos => m_Wrapper.m_Player_PrimaryFingerPos;
+        public InputAction @SecondaryFingerPos => m_Wrapper.m_Player_SecondaryFingerPos;
+        public InputAction @SecondaryTouchContact => m_Wrapper.m_Player_SecondaryTouchContact;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -383,12 +429,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
-                @Move1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove1;
-                @Move1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove1;
-                @Move1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove1;
-                @Look1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook1;
-                @Look1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook1;
-                @Look1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook1;
+                @Zoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnZoom;
+                @PrimaryFingerPos.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFingerPos;
+                @PrimaryFingerPos.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFingerPos;
+                @PrimaryFingerPos.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPrimaryFingerPos;
+                @SecondaryFingerPos.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryFingerPos;
+                @SecondaryFingerPos.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryFingerPos;
+                @SecondaryFingerPos.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryFingerPos;
+                @SecondaryTouchContact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryTouchContact;
+                @SecondaryTouchContact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryTouchContact;
+                @SecondaryTouchContact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSecondaryTouchContact;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -405,12 +457,18 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
-                @Move1.started += instance.OnMove1;
-                @Move1.performed += instance.OnMove1;
-                @Move1.canceled += instance.OnMove1;
-                @Look1.started += instance.OnLook1;
-                @Look1.performed += instance.OnLook1;
-                @Look1.canceled += instance.OnLook1;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
+                @PrimaryFingerPos.started += instance.OnPrimaryFingerPos;
+                @PrimaryFingerPos.performed += instance.OnPrimaryFingerPos;
+                @PrimaryFingerPos.canceled += instance.OnPrimaryFingerPos;
+                @SecondaryFingerPos.started += instance.OnSecondaryFingerPos;
+                @SecondaryFingerPos.performed += instance.OnSecondaryFingerPos;
+                @SecondaryFingerPos.canceled += instance.OnSecondaryFingerPos;
+                @SecondaryTouchContact.started += instance.OnSecondaryTouchContact;
+                @SecondaryTouchContact.performed += instance.OnSecondaryTouchContact;
+                @SecondaryTouchContact.canceled += instance.OnSecondaryTouchContact;
             }
         }
     }
@@ -472,8 +530,10 @@ public partial class @PlayerInput : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnMove1(InputAction.CallbackContext context);
-        void OnLook1(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnPrimaryFingerPos(InputAction.CallbackContext context);
+        void OnSecondaryFingerPos(InputAction.CallbackContext context);
+        void OnSecondaryTouchContact(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

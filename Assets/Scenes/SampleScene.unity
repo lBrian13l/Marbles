@@ -701,6 +701,7 @@ GameObject:
   - component: {fileID: 274632560}
   - component: {fileID: 274632559}
   - component: {fileID: 274632558}
+  - component: {fileID: 274632561}
   m_Layer: 5
   m_Name: Attack Button
   m_TagString: Untagged
@@ -772,9 +773,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnAttack
+      - m_Target: {fileID: 274632561}
+        m_TargetAssemblyTypeName: AttackButton, Assembly-CSharp
+        m_MethodName: Attack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -822,6 +823,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274632556}
   m_CullTransparentMesh: 1
+--- !u!114 &274632561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274632556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e4e660c689b33c4d85e8fd7518e4f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &494972943
 GameObject:
   m_ObjectHideFlags: 0
@@ -851,12 +864,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c532bf3572b2ea64ba5ac07b9b94771e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabPowerup: {fileID: 1000010880751780, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
-  prefabEnemy: {fileID: 560683822002690853, guid: c2a85a3c76895d945b2fc5201459dc82, type: 3}
-  enemyCount: 0
+  _prefabPowerup: {fileID: 1000010880751780, guid: c3c0707254334a64ca8198f7486e977d, type: 3}
+  _prefabEnemy: {fileID: 560683822002690853, guid: c2a85a3c76895d945b2fc5201459dc82, type: 3}
+  EnemyCount: 0
   _gameConfig: {fileID: 11400000, guid: fd0630533867af548b1d322b55b51935, type: 2}
   _plane: {fileID: 1505205710}
   _enemyList: []
+  _gemList: []
 --- !u!4 &494972945
 Transform:
   m_ObjectHideFlags: 0
@@ -1199,6 +1213,7 @@ GameObject:
   - component: {fileID: 737688618}
   - component: {fileID: 737688617}
   - component: {fileID: 737688616}
+  - component: {fileID: 737688619}
   m_Layer: 5
   m_Name: Jump Button
   m_TagString: Untagged
@@ -1270,9 +1285,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnJump
+      - m_Target: {fileID: 737688619}
+        m_TargetAssemblyTypeName: JumpButton, Assembly-CSharp
+        m_MethodName: Jump
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1320,6 +1335,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 737688614}
   m_CullTransparentMesh: 1
+--- !u!114 &737688619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737688614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 589418c488ad7b640b91872c6e179f9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &799157749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1458,9 +1485,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d598aaa1693c62f4abfac72956081e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  restartButton: {fileID: 1160382994}
-  gameOverText: {fileID: 1062385453}
-  EnemyCounterText: {fileID: 1410510709}
+  _restartButton: {fileID: 1160382994}
+  _gameOverText: {fileID: 1062385453}
+  _enemyCounterText: {fileID: 1410510709}
   _playerPrefab: {fileID: 8272157840671585110, guid: c35f675283416aa45a8676d6eb75a7d4, type: 3}
 --- !u!4 &926670697
 Transform:
