@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DeathTrap : MonoBehaviour
 {
+    public Action GameOver;
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            EventBus.RaiseEvent<IGameOverHandler>(h => h.HandleGameOver());
+            GameOver?.Invoke();
             Debug.Log("Game Over (spikes)");
         }
         else
         {
-            //EventBus.RaiseEvent<IEnemyDiedHandler>(h => h.HandleEnemyDied(collision.gameObject));
             collision.gameObject.GetComponent<Enemy>().Health = 0;
             //Destroy(collision.gameObject);
             Debug.Log("Destroyed (spikes)");

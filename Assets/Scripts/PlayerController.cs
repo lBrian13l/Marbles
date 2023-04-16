@@ -1,9 +1,12 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using System;
 
-public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
+public class PlayerController : MonoBehaviour
 {
+    //TODO отрефакторить прошлогодний скрипт
+
     [SerializeField] private float _speed;
     [SerializeField] private float _speedLimit;
     private Rigidbody _playerRb;
@@ -26,8 +29,8 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private bool _attackedRecently;
     private bool _attackCooldown;
     public float Health;
-    [SerializeField] private GameObject _powerupIndicator;
-    public bool PowerupIndicatorIsActive;
+    [SerializeField] private GameObject _indicator;
+    public bool IndicatorIsActive => _indicator.activeInHierarchy;
     private const float Epsilon = 0.00001f;
     private Vector3 _playerVelocity;
     public float AttackCooldown;
@@ -40,38 +43,37 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private bool _isMoving;
     private bool _isRotating;
     private bool _gameOver;
+    private NavMeshAgent _navMeshAgent;
+    public event Action PlayerDied;
+    public Action<GameObject> GemCollected;
+    
 
     private void Awake()
     {
-        Player_Input = new PlayerInput();
-
-        Player_Input.Player.Jump.performed += ctx => OnJump();
-        Player_Input.Player.Move.performed += ctx => OnMove();
-        Player_Input.Player.Move.started += ctx => OnMoveStart();
-        Player_Input.Player.Move.canceled += ctx => OnMoveEnd();
-        Player_Input.Player.Look.performed += ctx => OnLook();
-        Player_Input.Player.Look.started += ctx => OnLookStart();
-        Player_Input.Player.Look.canceled += ctx => OnLookEnd();
-        Player_Input.Player.Attack.performed += ctx => OnAttack();
-        Player_Input.Player.Zoom.performed += ctx => OnZoom();
-        Player_Input.Player.SecondaryTouchContact.started += ctx => ZoomStart();
-        Player_Input.Player.SecondaryTouchContact.canceled += ctx => ZoomEnd();
+        SubscribeInput();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         _playerRb = GetComponent<Rigidbody>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
         _cameraRotationSpeed = _gameConfig.GetRotationSpeed();
         _cameraPos = new Vector3(0f, _cameraZoom, -_cameraZoom);
     }
 
-    // Update is called once per frame
     void Update()
     {
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
         _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
+
+        if (NavMesh.SamplePosition(_navMeshAgent.transform.position, out NavMeshHit hit, 2.25f, NavMesh.AllAreas))
+        {
+            if (hit.mask == 8)
+            {
+                _navMeshAgent.enabled = false;
+            }
+        }
 
         Move();
             
@@ -83,7 +85,7 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         {
             if (Health <= 0 || transform.position.y < -5)
             {
-                EventBus.RaiseEvent<IGameOverHandler>(h => h.HandleGameOver());
+                PlayerDied?.Invoke();
             }
         }
     }
@@ -98,8 +100,9 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     public void HandleOnGameOver()
     {
         _gameOver = true;
+        enabled = false;
         GetComponent<SphereCollider>().enabled = false;
-        _powerupIndicator.SetActive(false);
+        _indicator.SetActive(false);
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         _ball.GetComponent<Renderer>().enabled = false;
@@ -116,8 +119,8 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
             _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
             _playerRb.AddForce(_normalizedVerticalMovementVector * _attackPower, ForceMode.Impulse);
             _attackCooldownIcon.Attacked();
-            StartCoroutine("c_AttackCooldown");
-            StartCoroutine("c_SpeedLimitDisabled");
+            StartCoroutine(c_AttackCooldown());
+            StartCoroutine(c_SpeedLimitDisabled());
         }
     }
 
@@ -191,12 +194,12 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
 
     private void ZoomStart()
     {
-        StartCoroutine("c_ZoomDetection");
+        StartCoroutine(c_ZoomDetection());
     }
 
     private void ZoomEnd()
     {
-        StopCoroutine("c_ZoomDetection");
+        StopCoroutine(c_ZoomDetection());
     }
 
     private IEnumerator c_ZoomDetection()
@@ -255,16 +258,6 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
         float distance = movement.magnitude;
         float angle = distance * (180 / Mathf.PI) / _ballRadius;
         _ball.transform.Rotate(rotationAxis * angle, Space.World);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
-        {
-            _powerupIndicator.SetActive(true);
-            PowerupIndicatorIsActive = true;
-            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -329,19 +322,37 @@ public class PlayerController : MonoBehaviour, IOnGameOverHandler, IFinishWaveHa
     private void OnEnable()
     {
         Player_Input.Enable();
-        EventBus.Subscribe(this);
-        EventBus.RaiseEvent<IPlayerSpawnedHandler>(h => h.HandlePlayerSpawned(transform.gameObject));
     }
 
     private void OnDisable()
     {
         Player_Input.Disable();
-        EventBus.Unsubscribe(this);
     }
 
-    public void HandleFinishWave()
+    public void DisableIndicator()
     {
-        _powerupIndicator.SetActive(false);
-        PowerupIndicatorIsActive = false;
+        _indicator.SetActive(false);
+    }
+
+    public void EnableIndicator()
+    {
+        _indicator.SetActive(true);
+    }
+
+    private void SubscribeInput()
+    {
+        Player_Input = new PlayerInput();
+
+        Player_Input.Player.Jump.performed += ctx => OnJump();
+        Player_Input.Player.Move.performed += ctx => OnMove();
+        Player_Input.Player.Move.started += ctx => OnMoveStart();
+        Player_Input.Player.Move.canceled += ctx => OnMoveEnd();
+        Player_Input.Player.Look.performed += ctx => OnLook();
+        Player_Input.Player.Look.started += ctx => OnLookStart();
+        Player_Input.Player.Look.canceled += ctx => OnLookEnd();
+        Player_Input.Player.Attack.performed += ctx => OnAttack();
+        Player_Input.Player.Zoom.performed += ctx => OnZoom();
+        Player_Input.Player.SecondaryTouchContact.started += ctx => ZoomStart();
+        Player_Input.Player.SecondaryTouchContact.canceled += ctx => ZoomEnd();
     }
 }

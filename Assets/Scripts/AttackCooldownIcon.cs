@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -15,9 +13,6 @@ public class AttackCooldownIcon : MonoBehaviour
     private DateTime _startingTime;
     private float _attackCooldownInMilliseconds;
 
-    
-
-    // Start is called before the first frame update
     void Start()
     {
         _player = FindObjectOfType<PlayerController>();
@@ -25,7 +20,6 @@ public class AttackCooldownIcon : MonoBehaviour
         _attackCooldownInMilliseconds = _player.AttackCooldown * 1000;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (_cooldownIsActive)

@@ -1,9 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using System;
 
-public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
+public class Enemy : MonoBehaviour
 {
+    //TODO отрефакторить прошлогодний скрипт
+
     private GameObject[] _gems;
     private Rigidbody _enemyRb;
     [SerializeField] private float _speed;
@@ -16,22 +18,24 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
     private Vector3 _enemyVelocity;
     private const float Epsilon = 0.00001f;
     private bool _gameOver;
-    [SerializeField] private GameObject _powerupIndicator;
-    public bool PowerupIndicatorIsActive;
+    [SerializeField] private GameObject _indicator;
+    public bool IndicatorIsActive => _indicator.activeInHierarchy;
     [SerializeField] private float _speedLimit;
+    private NavMeshAgent _navMeshAgent;
 
-    // Start is called before the first frame update
+    public event Action<Enemy> EnemyDied;
+
     void Start()
     {
         _enemyRb = GetComponent<Rigidbody>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (transform.position.y < -5 || Health <= 0)
         {
-            EventBus.RaiseEvent<IEnemyDiedHandler>(h => h.HandleEnemyDied(transform.gameObject, PowerupIndicatorIsActive));
+            EnemyDied?.Invoke(this);
         }
 
         if (!_gameOver)
@@ -40,6 +44,15 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
             SpeedLimit();
         }
         RotateBall();
+
+        if (NavMesh.SamplePosition(_navMeshAgent.transform.position, out NavMeshHit hit, 2.25f, NavMesh.AllAreas))
+        {
+            Debug.Log(hit.mask);
+            if (hit.mask == 8)
+            {
+                _navMeshAgent.enabled = false;
+            }
+        }
     }
 
     private void LateUpdate()
@@ -47,14 +60,9 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
         _enemyVelocity = _enemyRb.velocity;
     }
 
-    public void HandleOnGameOver()
-    {
-        _gameOver = true;
-    }
-
     void Move()
     {
-        if (!PowerupIndicatorIsActive && _isOnGround)
+        if (!IndicatorIsActive && _isOnGround)
         {
             MoveToPowerup();
         }
@@ -99,16 +107,6 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
         float distance = movement.magnitude;
         float angle = distance * (180 / Mathf.PI) / _ballRadius;
         _ball.transform.Rotate(rotationAxis * angle, Space.World);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Gem") && !PowerupIndicatorIsActive)
-        {
-            _powerupIndicator.SetActive(true);
-            PowerupIndicatorIsActive = true;
-            EventBus.RaiseEvent<IGemCollectedHandler>(h => h.HandleGemCollected(other.gameObject));
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -163,20 +161,9 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
         }
     }
 
-    private void OnEnable()
+    public void HandleGameOver()
     {
-        EventBus.Subscribe(this);
-    }
-
-    private void OnDisable()
-    {
-        EventBus.Unsubscribe(this);
-    }
-
-    public void HandleFinishWave()
-    {
-        _powerupIndicator.SetActive(false);
-        PowerupIndicatorIsActive = false;
+        _gameOver = true;
     }
 
     public void SetPlayer(GameObject player)
@@ -190,5 +177,15 @@ public class Enemy : MonoBehaviour, IOnGameOverHandler, IFinishWaveHandler
         {
             _enemyRb.velocity = _enemyRb.velocity.normalized * _speedLimit;
         }
+    }
+
+    public void DisableIndicator()
+    {
+        _indicator.SetActive(false);
+    }
+
+    public void EnableIndicator()
+    {
+        _indicator.SetActive(true);
     }
 }

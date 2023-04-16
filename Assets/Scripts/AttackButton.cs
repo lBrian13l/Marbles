@@ -1,28 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackButton : MonoBehaviour, IPlayerSpawnedHandler
+public class AttackButton : MonoBehaviour
 {
     private PlayerController _player;
+
+    private void Start()
+    {
+        _player = FindObjectOfType<PlayerController>();
+    }
 
     public void Attack()
     {
         _player.OnAttack();
-    }
-
-    public void HandlePlayerSpawned(GameObject player)
-    {
-        _player = player.GetComponent<PlayerController>();
-    }
-
-    private void OnEnable()
-    {
-        EventBus.Subscribe(this);
-    }
-
-    private void OnDisable()
-    {
-        EventBus.Unsubscribe(this);
     }
 }

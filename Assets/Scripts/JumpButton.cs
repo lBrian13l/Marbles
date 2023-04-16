@@ -1,28 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class JumpButton : MonoBehaviour, IPlayerSpawnedHandler
+public class JumpButton : MonoBehaviour
 {
     private PlayerController _player;
+
+    private void Start()
+    {
+        _player = FindObjectOfType<PlayerController>();
+    }
 
     public void Jump()
     {
         _player.OnJump();
-    }
-
-    public void HandlePlayerSpawned(GameObject player)
-    {
-        _player = player.GetComponent<PlayerController>();
-    }
-
-    private void OnEnable()
-    {
-        EventBus.Subscribe(this);
-    }
-
-    private void OnDisable()
-    {
-        EventBus.Unsubscribe(this);
     }
 }
