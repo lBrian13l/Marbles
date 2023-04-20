@@ -25,7 +25,6 @@ public class Level : MonoBehaviour
         _enemyManager.EnemiesDied += OnEnemiesDied;
         _enemyManager.EnemyCountChanged += OnEnemyCountChanged;
         _enemyManager.NeedToRemoveGem += OnNeedToRemoveGem;
-
         _screens = screens;
         _screens.ShowGameScreen();
 
@@ -38,6 +37,7 @@ public class Level : MonoBehaviour
 
         int enemyStartCount = _gameConfig.GetEnemyCount();
         _spawnManager.SetSpawnRange(enemyStartCount);
+        _screens.UpdateEnemyCounter(enemyStartCount);
 
         if (enemyStartCount > 10)
         {
@@ -47,7 +47,11 @@ public class Level : MonoBehaviour
         List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(enemyStartCount);
         _gemManager.SetGems(gemObjects);
         List<GameObject> enemyObjects = _spawnManager.SpawnAndGetEnemies(enemyStartCount);
-        _enemyManager.SetEnemies(enemyObjects, playerObject);
+        _enemyManager.SetEnemies(enemyObjects);
+        _aiController.SetEnemies(enemyObjects);
+        _aiController.SetGems(gemObjects);
+        _aiController.SetPlayer(playerObject);
+        _aiController.StartSearchCorutine();
     }
 
     private void OnGemsCollected()
@@ -63,6 +67,7 @@ public class Level : MonoBehaviour
         _player.DisableIndicator();
         List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(_enemyManager.EnemyCount);
         _gemManager.SetGems(gemObjects);
+        _aiController.SetGems(gemObjects);
     }
 
     private void OnNeedToEnableIndicator()
@@ -75,7 +80,6 @@ public class Level : MonoBehaviour
         {
             _enemyManager.EnableLastEnemyIndicator();
         }
-
     }
 
     private void OnEnemiesDied()
@@ -116,7 +120,8 @@ public class Level : MonoBehaviour
 
     private void GameEnded()
     {
-        _player.HandleOnGameOver();
-        _enemyManager.HandleGameOver(); //временный метод до рефакторинга Enemy
+        _player.HandleGameOver();
+        _enemyManager.HandleGameOver();
+        _aiController.StopSearchCorutine();
     }
 }

@@ -1,21 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 using System;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Character
 {
-    //TODO отрефакторить прошлогодний скрипт
+    //TODO refactoring
 
-    [SerializeField] private float _speed;
-    [SerializeField] private float _speedLimit;
-    private Rigidbody _playerRb;
-    private bool _isOnGround;
-    [SerializeField] private float _jumpForce;
     [SerializeField] private GameObject _focalPoint;
-    [SerializeField] private GameObject _ball;
-    private readonly float _ballRadius = 2.5f;
-    private Vector3 _steepVector;
     private float _cameraRotationSpeed;
     private Vector3 _normalizedVerticalMovementVector;
     private Vector3 _normalizedMovementVector;
@@ -26,13 +17,7 @@ public class PlayerController : MonoBehaviour
     private float _rotationY;
     private Quaternion _rotationMovement;
     [SerializeField] private float _attackPower;
-    private bool _attackedRecently;
     private bool _attackCooldown;
-    public float Health;
-    [SerializeField] private GameObject _indicator;
-    public bool IndicatorIsActive => _indicator.activeInHierarchy;
-    private const float Epsilon = 0.00001f;
-    private Vector3 _playerVelocity;
     public float AttackCooldown;
     private AttackCooldownIcon _attackCooldownIcon;
     [SerializeField] private GameConfig _gameConfig;
@@ -42,11 +27,9 @@ public class PlayerController : MonoBehaviour
     private float _zoomingSpeed = 10f;
     private bool _isMoving;
     private bool _isRotating;
-    private bool _gameOver;
-    private NavMeshAgent _navMeshAgent;
+    //private NavMeshAgent _navMeshAgent;
+
     public event Action PlayerDied;
-    public Action<GameObject> GemCollected;
-    
 
     private void Awake()
     {
@@ -55,85 +38,69 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _playerRb = GetComponent<Rigidbody>();
-        _navMeshAgent = GetComponent<NavMeshAgent>();
+        //_navMeshAgent = GetComponent<NavMeshAgent>();
         _attackCooldownIcon = FindObjectOfType<AttackCooldownIcon>();
         _cameraRotationSpeed = _gameConfig.GetRotationSpeed();
         _cameraPos = new Vector3(0f, _cameraZoom, -_cameraZoom);
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
+
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
         _lookDirection = Player_Input.Player.Look.ReadValue<Vector2>();
 
-        if (NavMesh.SamplePosition(_navMeshAgent.transform.position, out NavMeshHit hit, 2.25f, NavMesh.AllAreas))
-        {
-            if (hit.mask == 8)
-            {
-                _navMeshAgent.enabled = false;
-            }
-        }
+        //if (NavMesh.SamplePosition(_navMeshAgent.transform.position, out NavMeshHit hit, 2.25f, NavMesh.AllAreas))
+        //{
+        //    if (hit.mask == 8)
+        //    {
+        //        _navMeshAgent.enabled = false;
+        //    }
+        //}
 
-        Move();
-            
-        if (!_attackedRecently)
-            SpeedLimit();
-        RotateBall();
-
-        if (!_gameOver)
-        {
-            if (Health <= 0 || transform.position.y < -5)
-            {
-                PlayerDied?.Invoke();
-            }
-        }
+        SetMoveDirection();
     }
 
-    private void LateUpdate()
+    protected override void LateUpdate()
     {
+        base.LateUpdate();
+
         RotateCamera();
-        _playerVelocity = _playerRb.velocity;
         Zooming();
     }
 
-    public void HandleOnGameOver()
+    public override void HandleGameOver()
     {
-        _gameOver = true;
+        base.HandleGameOver();
+
         enabled = false;
         GetComponent<SphereCollider>().enabled = false;
-        _indicator.SetActive(false);
+        DisableIndicator();
         GetComponent<Rigidbody>().useGravity = false;
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        _ball.GetComponent<Renderer>().enabled = false;
+        GetComponentInChildren<Renderer>().enabled = false;
         Player_Input.Disable();
-        Health = 0;
+        _health = 0;
     }
 
     public void OnAttack()
     {
         if (!_attackCooldown)
         {
-            _attackedRecently = true;
             _attackCooldown = true;
             _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
-            _playerRb.AddForce(_normalizedVerticalMovementVector * _attackPower, ForceMode.Impulse);
+            _normalizedVerticalMovementVector *= _attackPower;
+            _ball.Attack(_normalizedVerticalMovementVector);
             _attackCooldownIcon.Attacked();
             StartCoroutine(c_AttackCooldown());
-            StartCoroutine(c_SpeedLimitDisabled());
         }
     }
 
-    IEnumerator c_AttackCooldown()
+    private IEnumerator c_AttackCooldown()
     {
         yield return new WaitForSeconds(AttackCooldown);
         _attackCooldown = false;
-    }
-
-    IEnumerator c_SpeedLimitDisabled()
-    {
-        yield return new WaitForSeconds(0.5f);
-        _attackedRecently = false;
     }
 
     private void OnMove()
@@ -141,13 +108,13 @@ public class PlayerController : MonoBehaviour
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
     }
 
-    private void Move()
+    protected override void SetMoveDirection()
     {
         _normalizedMovementVector = new Vector3(_moveDirectionInput.x, 0, _moveDirectionInput.y);
         _normalizedVerticalMovementVector = new Vector3(_focalPoint.transform.forward.x, 0f, _focalPoint.transform.forward.z).normalized;
         _rotationMovement = Quaternion.FromToRotation(Vector3.forward, _normalizedVerticalMovementVector);
         _normalizedMovementVector = _rotationMovement * _normalizedMovementVector;
-        _playerRb.AddForce(_normalizedMovementVector * _speed * Time.deltaTime);
+        _moveDirection = _normalizedMovementVector;
     }
 
     private void OnMoveStart()
@@ -244,79 +211,12 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump()
     {
-        if (_isOnGround)
-        {
-            _playerRb.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-        }
+        Jump();
     }
 
-    private void RotateBall()
+    protected override void Die()
     {
-        Vector3 movement = _playerRb.velocity * Time.deltaTime;
-        Vector3 rotationAxis = Vector3.Cross(Vector3.up + _steepVector, movement).normalized;
-        movement -= (Vector3.up + _steepVector) * Vector3.Dot(movement, (Vector3.up + _steepVector));
-        float distance = movement.magnitude;
-        float angle = distance * (180 / Mathf.PI) / _ballRadius;
-        _ball.transform.Rotate(rotationAxis * angle, Space.World);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _isOnGround = true;
-        }
-
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Vector3 toEnemyVector = collision.transform.position - transform.position;
-            Vector3 toEnemyVelocity = Vector3.Project(_playerVelocity, toEnemyVector);
-            if (AreCodirected(toEnemyVector, toEnemyVelocity))
-            {
-                int multiplier = (int)(toEnemyVelocity.magnitude / 15f);
-                Damage(collision, multiplier);
-                //Debug.Log($"Speed: {toEnemyVelocity.magnitude}, multiplier: {multiplier}");
-            }
-        }
-    }
-
-    private bool AreCodirected(Vector3 vector1, Vector3 vector2)
-    {
-        return Vector3.Dot(vector1.normalized, vector2.normalized) > 1 - Epsilon;
-    }
-
-    private void Damage(Collision collision, int multiplier)
-    {
-        collision.gameObject.GetComponent<Enemy>().Health -= 10 * multiplier;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        _steepVector = Vector3.zero;
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            _isOnGround = false;
-        }
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        _steepVector = Vector3.zero;
-        for (int i = 0; i < collision.contactCount; i++)
-        {
-            if (!collision.gameObject.CompareTag("Ground"))
-            {
-                _steepVector += collision.GetContact(i).normal;
-            }
-        }
-    }
-
-    private void SpeedLimit()
-    {
-        if (_playerRb.velocity.magnitude > _speedLimit)
-        {
-            _playerRb.velocity = _playerRb.velocity.normalized * _speedLimit;
-        }
+        PlayerDied?.Invoke();
     }
 
     private void OnEnable()
@@ -327,16 +227,6 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         Player_Input.Disable();
-    }
-
-    public void DisableIndicator()
-    {
-        _indicator.SetActive(false);
-    }
-
-    public void EnableIndicator()
-    {
-        _indicator.SetActive(true);
     }
 
     private void SubscribeInput()

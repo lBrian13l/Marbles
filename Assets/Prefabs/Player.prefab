@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 8272157840671585111}
   - component: {fileID: 8272157840671585132}
   - component: {fileID: 8484364123602023265}
+  - component: {fileID: 6133646975657408132}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -235,14 +236,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a9f28932a15a134f83955738a0ec413, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1250
-  _speedLimit: 20
-  _jumpForce: 50
-  _focalPoint: {fileID: 8272157840755920525}
-  _ball: {fileID: 8272157839075822719}
-  _attackPower: 25
-  Health: 100
+  _ball: {fileID: 6133646975657408132}
   _indicator: {fileID: 8272831464580876869}
+  _lastVelocity: {x: 0, y: 0, z: 0}
+  _focalPoint: {fileID: 8272157840755920525}
+  _attackPower: 25
   AttackCooldown: 3
   _gameConfig: {fileID: 11400000, guid: fd0630533867af548b1d322b55b51935, type: 2}
   _camera: {fileID: 8272157840157663097}
@@ -284,6 +282,23 @@ NavMeshAgent:
   m_BaseOffset: 0.45
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6133646975657408132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272157840671585110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90118881ab94559498b68e8bdd9bc77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 8272157840671585132}
+  _visibleBall: {fileID: 8272157839075822719}
+  _moveSpeed: 1250
+  _speedLimit: 20
+  _jumpForce: 50
 --- !u!1 &8272157840755920525
 GameObject:
   m_ObjectHideFlags: 0

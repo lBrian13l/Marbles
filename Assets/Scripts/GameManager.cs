@@ -31,14 +31,14 @@ public class GameManager : MonoBehaviour
         RestartGame();
     }
 
-    public void RestartGame()
+    private void RestartGame()
     {
         _playerInput.UI.Restart.performed -= ctx => RestartGame();
         _playerInput.Disable();
         SceneManager.LoadScene(1);
     }
 
-    public void HandleGameOver()
+    private void HandleGameOver()
     {
         //Cursor.lockState = CursorLockMode.None;
         //Cursor.visible = true;

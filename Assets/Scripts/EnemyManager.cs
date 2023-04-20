@@ -13,14 +13,13 @@ public class EnemyManager : MonoBehaviour
 
     public int EnemyCount => _enemies.Count;
 
-    public void SetEnemies(List<GameObject> enemyObjects, GameObject playerObject)
+    public void SetEnemies(List<GameObject> enemyObjects)
     {
         foreach (GameObject enemyObject in enemyObjects)
         {
             if (enemyObject.TryGetComponent(out Enemy enemy))
             {
                 enemy.EnemyDied += OnEnemyDied;
-                enemy.SetPlayer(playerObject);
                 _enemies.Add(enemy);
             }
         }
@@ -96,7 +95,7 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void HandleGameOver() //временный метод до рефакторинга Enemy
+    public void HandleGameOver()
     {
         foreach (Enemy enemy in _enemies)
         {

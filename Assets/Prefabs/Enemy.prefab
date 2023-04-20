@@ -463,6 +463,7 @@ GameObject:
   - component: {fileID: 1146874078081653295}
   - component: {fileID: 2251509071340086999}
   - component: {fileID: -263765588728816508}
+  - component: {fileID: 4744081980796246156}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -520,11 +521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dccdb0c1d5a2f9441b23fe45dc93b1ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 900
-  _ball: {fileID: 7140791747766519387}
-  Health: 100
+  _ball: {fileID: 4744081980796246156}
   _indicator: {fileID: 8688620107423138889}
-  _speedLimit: 20
+  _lastVelocity: {x: 0, y: 0, z: 0}
 --- !u!54 &2251509071340086999
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -563,6 +562,23 @@ NavMeshAgent:
   m_BaseOffset: 0.45
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4744081980796246156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560683822002690853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90118881ab94559498b68e8bdd9bc77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 2251509071340086999}
+  _visibleBall: {fileID: 7140791747766519387}
+  _moveSpeed: 1250
+  _speedLimit: 20
+  _jumpForce: 50
 --- !u!1 &7140791747766519387
 GameObject:
   m_ObjectHideFlags: 0
