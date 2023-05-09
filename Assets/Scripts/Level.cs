@@ -10,7 +10,7 @@ public class Level : MonoBehaviour
     [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private AIController _aiController;
     [SerializeField] private GameConfig _gameConfig;
-    [SerializeField] private GameObject _plane;
+    [SerializeField] private GameObject _ground;
 
     private PlayerController _player;
     private Screens _screens;
@@ -41,7 +41,7 @@ public class Level : MonoBehaviour
 
         if (enemyStartCount > 10)
         {
-            _plane.transform.localScale = new Vector3(enemyStartCount, 1, enemyStartCount);
+            _ground.transform.localScale = new Vector3(enemyStartCount * 10, _ground.transform.localScale.y, enemyStartCount * 10);
         }
 
         List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(enemyStartCount);

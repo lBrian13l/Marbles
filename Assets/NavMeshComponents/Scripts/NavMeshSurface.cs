@@ -482,5 +482,26 @@ namespace UnityEngine.AI
             }
         }
 #endif
+
+        public void PrepareSubSurfaces()
+        {
+            WalkableFigure[] figures = GetComponentsInChildren<WalkableFigure>();
+
+            foreach (WalkableFigure figure in figures)
+            {
+                figure.ShowMeshes();
+                figure.SetupLinks();
+            }
+        }
+
+        public void HideSubSurfaces()
+        {
+            WalkableFigure[] figures = GetComponentsInChildren<WalkableFigure>();
+
+            foreach (WalkableFigure figure in figures)
+            {
+                figure.HideMeshes();
+            }
+        }
     }
 }

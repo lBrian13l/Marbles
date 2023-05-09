@@ -116,6 +116,8 @@ namespace UnityEditor.AI
 
             foreach (NavMeshSurface surf in surfaces)
             {
+                surf.PrepareSubSurfaces();
+
                 StoreNavMeshDataIfInPrefab(surf);
 
                 var oper = new AsyncBakeOperation();
@@ -157,6 +159,8 @@ namespace UnityEditor.AI
                         surface.AddData();
                     CreateNavMeshAsset(surface);
                     EditorSceneManager.MarkSceneDirty(surface.gameObject.scene);
+
+                    surface.HideSubSurfaces();
                 }
             }
             m_BakeOperations.RemoveAll(o => o.bakeOperation == null || o.bakeOperation.isDone);

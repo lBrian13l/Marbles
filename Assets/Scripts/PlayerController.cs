@@ -58,8 +58,6 @@ public class PlayerController : Character
         //        _navMeshAgent.enabled = false;
         //    }
         //}
-
-        SetMoveDirection();
     }
 
     protected override void LateUpdate()

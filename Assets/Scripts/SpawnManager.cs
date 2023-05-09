@@ -7,6 +7,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _gemPrefab;
+    [SerializeField] private Transform _enemiesRoot;
+    [SerializeField] private Transform _gemsRoot;
 
     private float _spawnRange = 45f;
 
@@ -24,7 +26,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             spawnLocation = new Vector3(Random.Range(-_spawnRange, _spawnRange), 3f, Random.Range(-_spawnRange, _spawnRange));
-            GameObject gem = Instantiate(_gemPrefab, spawnLocation, _gemPrefab.transform.rotation);
+            GameObject gem = Instantiate(_gemPrefab, spawnLocation, _gemPrefab.transform.rotation, _gemsRoot);
             gemObjects.Add(gem);
         }
 
@@ -39,7 +41,7 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < enemyCount; i++)
         {
             spawnLocation = new Vector3(Random.Range(-_spawnRange, _spawnRange), 3f, Random.Range(-_spawnRange, _spawnRange));
-            GameObject enemyObject = Instantiate(_enemyPrefab, spawnLocation, _enemyPrefab.transform.rotation);
+            GameObject enemyObject = Instantiate(_enemyPrefab, spawnLocation, _enemyPrefab.transform.rotation, _enemiesRoot);
             enemyObjects.Add(enemyObject);
         }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AIController : MonoBehaviour
 {
+    //TODO detecting target by spherenonalloc or raycast
+
     [SerializeField] private float _searchDelay = 1;
 
     private List<Enemy> _enemies = new List<Enemy>();

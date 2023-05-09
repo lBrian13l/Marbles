@@ -16,7 +16,6 @@ public abstract class Character : MonoBehaviour
     public bool IndicatorIsActive => _indicator.activeInHierarchy;
     public int Health => _health;
 
-    // Update is called once per frame
     protected virtual void Update()
     {
         if (_gameOver)
@@ -54,15 +53,9 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    protected virtual void Die()
-    {
+    protected abstract void Die();
 
-    }
-
-    protected virtual void SetMoveDirection()
-    {
-
-    }
+    protected abstract void SetMoveDirection();
 
     public virtual void HandleGameOver()
     {
