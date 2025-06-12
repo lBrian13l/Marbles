@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
 {
@@ -34,6 +35,20 @@ public class AIController : MonoBehaviour
                     Transform target = FindNearestGem(enemy.gameObject);
                     enemy.SetTarget(target);
                 }
+
+                if (enemy.HasTarget)
+                {
+                    if (NavMesh.SamplePosition(enemy.Target.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                    {
+                        NavMeshPath path = new NavMeshPath();
+                        NavMesh.CalculatePath(enemy.transform.position, hit.position, NavMesh.AllAreas, path);
+
+                        if (path.corners.Length > 1)
+                        {
+                            enemy.SetNextCorner(path.corners[1]);
+                        }
+                    }
+                }
             }
 
             yield return new WaitForSeconds(_searchDelay);
@@ -62,6 +77,7 @@ public class AIController : MonoBehaviour
 
     public void StartSearchCorutine()
     {
+        StopSearchCorutine();
         _targetSearchCorutine = StartCoroutine(SearchTarget());
     }
 

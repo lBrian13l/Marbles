@@ -104,6 +104,7 @@ public class PlayerController : Character
     private void OnMove()
     {
         _moveDirectionInput = Player_Input.Player.Move.ReadValue<Vector2>();
+        //Debug.Log("kek");
     }
 
     protected override void SetMoveDirection()
@@ -233,6 +234,11 @@ public class PlayerController : Character
 
         Player_Input.Player.Jump.performed += ctx => OnJump();
         Player_Input.Player.Move.performed += ctx => OnMove();
+        Player_Input.Player.Move.performed += ctx =>
+        {
+            Debug.Log("ctx " + ctx.ReadValue<Vector2>());
+            Debug.Log(Player_Input.Player.Move.ReadValue<Vector2>());
+        };
         Player_Input.Player.Move.started += ctx => OnMoveStart();
         Player_Input.Player.Move.canceled += ctx => OnMoveEnd();
         Player_Input.Player.Look.performed += ctx => OnLook();

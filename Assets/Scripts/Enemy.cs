@@ -4,7 +4,7 @@ using System;
 public class Enemy : Character
 {
     private Transform _target;
-    private Vector3 _nextCornerPosition;
+    private Vector3 _nextCorner;
 
     public event Action<Enemy> EnemyDied;
 
@@ -25,14 +25,19 @@ public class Enemy : Character
     {
         if (_target)
         {
-            _moveDirection = (_target.position - transform.position).normalized;
-            //_moveDirection = (_nextCornerPosition - transform.position).normalized;
+            Vector3 direction = (_nextCorner - transform.position).normalized;
+            direction = new Vector3(direction.x, 0f, direction.z);
+            _moveDirection = direction;
+        }
+        else
+        {
+            _moveDirection = Vector3.zero;
         }
     }
 
-    public void SetCornerPosition(Vector3 cornerPosition)
+    public void SetNextCorner(Vector3 corner)
     {
-        _nextCornerPosition = cornerPosition;
+        _nextCorner = corner;
     }
 
     public void SetTarget(Transform target)

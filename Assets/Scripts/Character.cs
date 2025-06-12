@@ -18,6 +18,8 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void Update()
     {
+        _ball.Rotate();
+
         if (_gameOver)
             return;
 

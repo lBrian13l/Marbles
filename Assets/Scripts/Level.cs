@@ -7,10 +7,9 @@ public class Level : MonoBehaviour
     [SerializeField] private SpawnManager _spawnManager;
     [SerializeField] private EnemyManager _enemyManager;
     [SerializeField] private GemManager _gemManager;
-    [SerializeField] private GameObject _spawnPoint;
     [SerializeField] private AIController _aiController;
+    [SerializeField] private NavMeshRandomizer _navMeshRandomizer;
     [SerializeField] private GameConfig _gameConfig;
-    [SerializeField] private GameObject _ground;
 
     private PlayerController _player;
     private Screens _screens;
@@ -28,7 +27,7 @@ public class Level : MonoBehaviour
         _screens = screens;
         _screens.ShowGameScreen();
 
-        GameObject playerObject = _spawnManager.SpawnAndGetPlayer(_spawnPoint.transform.position);
+        GameObject playerObject = _spawnManager.SpawnAndGetPlayer(_navMeshRandomizer.GetRandomPoints(1)[0]);
         if (playerObject.TryGetComponent(out PlayerController player))
         {
             _player = player;
@@ -36,17 +35,11 @@ public class Level : MonoBehaviour
         }
 
         int enemyStartCount = _gameConfig.GetEnemyCount();
-        _spawnManager.SetSpawnRange(enemyStartCount);
         _screens.UpdateEnemyCounter(enemyStartCount);
 
-        if (enemyStartCount > 10)
-        {
-            _ground.transform.localScale = new Vector3(enemyStartCount * 10, _ground.transform.localScale.y, enemyStartCount * 10);
-        }
-
-        List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(enemyStartCount);
+        List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(_navMeshRandomizer.GetRandomPoints(enemyStartCount));
         _gemManager.SetGems(gemObjects);
-        List<GameObject> enemyObjects = _spawnManager.SpawnAndGetEnemies(enemyStartCount);
+        List<GameObject> enemyObjects = _spawnManager.SpawnAndGetEnemies(_navMeshRandomizer.GetRandomPoints(enemyStartCount));
         _enemyManager.SetEnemies(enemyObjects);
         _aiController.SetEnemies(enemyObjects);
         _aiController.SetGems(gemObjects);
@@ -65,7 +58,7 @@ public class Level : MonoBehaviour
         _enemyManager.KillLostEnemy();
         _enemyManager.DisableIndicators();
         _player.DisableIndicator();
-        List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(_enemyManager.EnemyCount);
+        List<GameObject> gemObjects = _spawnManager.SpawnAndGetGems(_navMeshRandomizer.GetRandomPoints(_enemyManager.EnemyCount));
         _gemManager.SetGems(gemObjects);
         _aiController.SetGems(gemObjects);
     }

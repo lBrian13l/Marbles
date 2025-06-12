@@ -18,7 +18,6 @@ public class Ball : MonoBehaviour
     {
         _rigidbody.AddForce(direction.normalized * _moveSpeed * Time.deltaTime, ForceMode.Force);
         LimitSpeed();
-        RotateVisibleBall();
     }
 
     private void LimitSpeed()
@@ -29,7 +28,7 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void RotateVisibleBall()
+    public void Rotate()
     {
         Vector3 movement = _rigidbody.velocity * Time.deltaTime;
         Vector3 rotationAxis = Vector3.Cross(Vector3.up + _steepVector, movement).normalized;

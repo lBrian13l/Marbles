@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -10,46 +9,35 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Transform _enemiesRoot;
     [SerializeField] private Transform _gemsRoot;
 
-    private float _spawnRange = 45f;
-
-    public GameObject SpawnAndGetPlayer(Vector3 spawnPosition)
+    public GameObject SpawnAndGetPlayer(Vector3 spawnPoint)
     {
-        GameObject playerObject = Instantiate(_playerPrefab, spawnPosition, _playerPrefab.transform.rotation);
+        GameObject playerObject = Instantiate(_playerPrefab, spawnPoint + _playerPrefab.transform.position, _playerPrefab.transform.rotation, transform.parent.parent);
         return playerObject;
     }
 
-    public List<GameObject> SpawnAndGetGems(int enemyCount)
+    public List<GameObject> SpawnAndGetGems(List<Vector3> spawnPoints)
     {
-        Vector3 spawnLocation;
         List<GameObject> gemObjects = new List<GameObject>();
 
-        for (int i = 0; i < enemyCount; i++)
+        for (int i = 0; i < spawnPoints.Count; i++)
         {
-            spawnLocation = new Vector3(Random.Range(-_spawnRange, _spawnRange), 3f, Random.Range(-_spawnRange, _spawnRange));
-            GameObject gem = Instantiate(_gemPrefab, spawnLocation, _gemPrefab.transform.rotation, _gemsRoot);
+            GameObject gem = Instantiate(_gemPrefab, spawnPoints[i] + _gemPrefab.transform.position, _gemPrefab.transform.rotation, _gemsRoot);
             gemObjects.Add(gem);
         }
 
         return gemObjects;
     }
 
-    public List<GameObject> SpawnAndGetEnemies(int enemyCount)
+    public List<GameObject> SpawnAndGetEnemies(List<Vector3> spawnPoints)
     {
-        Vector3 spawnLocation;
         List<GameObject> enemyObjects = new List<GameObject>();
 
-        for (int i = 0; i < enemyCount; i++)
+        for (int i = 0; i < spawnPoints.Count; i++)
         {
-            spawnLocation = new Vector3(Random.Range(-_spawnRange, _spawnRange), 3f, Random.Range(-_spawnRange, _spawnRange));
-            GameObject enemyObject = Instantiate(_enemyPrefab, spawnLocation, _enemyPrefab.transform.rotation, _enemiesRoot);
+            GameObject enemyObject = Instantiate(_enemyPrefab, spawnPoints[i] + _enemyPrefab.transform.position, _enemyPrefab.transform.rotation, _enemiesRoot);
             enemyObjects.Add(enemyObject);
         }
 
         return enemyObjects;
-    }
-
-    public void SetSpawnRange(int enemyCount)
-    {
-        _spawnRange = 4.5f * enemyCount;
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1779350265459782651}
   - component: {fileID: 1779350265459782648}
   - component: {fileID: 1779350265459782646}
+  - component: {fileID: 6350659957241251208}
   m_Layer: 0
   m_Name: SubMesh1
   m_TagString: Untagged
@@ -102,6 +103,22 @@ MonoBehaviour:
   m_Bidirectional: 0
   m_AutoUpdatePosition: 0
   m_Area: 3
+--- !u!114 &6350659957241251208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779350265459782647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1779350265546551169
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,6 +131,7 @@ GameObject:
   - component: {fileID: 1779350265546551170}
   - component: {fileID: 1779350265546551171}
   - component: {fileID: 1779350265546551168}
+  - component: {fileID: 4839899294832315252}
   m_Layer: 0
   m_Name: SubMesh3
   m_TagString: Untagged
@@ -204,6 +222,22 @@ MonoBehaviour:
   m_Bidirectional: 0
   m_AutoUpdatePosition: 0
   m_Area: 3
+--- !u!114 &4839899294832315252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779350265546551169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1779350265664144535
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,6 +404,7 @@ GameObject:
   - component: {fileID: 1779350266786861175}
   - component: {fileID: 1779350266786861172}
   - component: {fileID: 1779350266786861177}
+  - component: {fileID: 1128463471647758150}
   m_Layer: 0
   m_Name: SubMesh2
   m_TagString: Untagged
@@ -460,6 +495,22 @@ MonoBehaviour:
   m_Bidirectional: 0
   m_AutoUpdatePosition: 0
   m_Area: 3
+--- !u!114 &1128463471647758150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779350266786861171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1779350266815736761
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,6 +523,7 @@ GameObject:
   - component: {fileID: 1779350266815736765}
   - component: {fileID: 1779350266815736762}
   - component: {fileID: 1779350266815736767}
+  - component: {fileID: 7480338488880618944}
   m_Layer: 0
   m_Name: SubMesh4
   m_TagString: Untagged
@@ -562,6 +614,22 @@ MonoBehaviour:
   m_Bidirectional: 0
   m_AutoUpdatePosition: 0
   m_Area: 3
+--- !u!114 &7480338488880618944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779350266815736761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 3
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1779350266867741838
 GameObject:
   m_ObjectHideFlags: 0
